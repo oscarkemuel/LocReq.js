@@ -11,12 +11,11 @@ class UserController {
   }
 
   async create(req: Request, res: Response) {
-    console.log('create')
     const { name, email, password } = req.body;
 
     const newUser = await this.usersService.create({ name, email, password });
 
-    return res.json(newUser);
+    return res.status(201).json({user: newUser});
   }
 
   async show(req: Request, res: Response) {
@@ -24,7 +23,7 @@ class UserController {
 
     const user = await this.usersService.show(id);
 
-    return res.json(user);
+    return res.json({user});
   }
 }
 

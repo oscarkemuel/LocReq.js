@@ -1,12 +1,14 @@
+import 'express-async-errors';
 import express from 'express';
 import dotenv from 'dotenv';
 import { router } from './routes';
-import { prisma } from './database';
+import { prsimaClient } from './database';
+import { errorMiddleware } from './middlewares/error';
 
 dotenv.config();
 const port = process.env.PORT;
 
-prisma.$connect()
+prsimaClient.$connect()
 .then(() => {
   console.log('Prisma connected');
 }).catch((err) => {
@@ -16,6 +18,7 @@ prisma.$connect()
 const app = express();
 app.use(express.json());
 app.use(router)
+app.use(errorMiddleware)
 
 app.get('/', (req, res) => {
   res.send('Expresss + TypeScript Server');

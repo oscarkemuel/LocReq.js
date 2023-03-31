@@ -1,4 +1,5 @@
 import { ICreateUserDTO } from "../dtos/ICreateUserDTO";
+import { BadRequestError, NotFoundError } from "../helpers/apiErros";
 import { UsersRepository } from "../repositories/UsersRepository";
 
 class UserService {
@@ -14,7 +15,7 @@ class UserService {
     const userAlreadyExists = await this.usersRepository.findByEmail(user.email);
 
     if (userAlreadyExists) {
-      throw new Error("User already exists!");
+      throw new BadRequestError("User already exists!");
     }
 
     const newUser = await this.usersRepository.create(user);
@@ -26,7 +27,7 @@ class UserService {
     const user = await this.usersRepository.findById(id);
 
     if (!user) {
-      throw new Error("User not found!");
+      throw new NotFoundError("User not found!");
     }
 
     return user;
