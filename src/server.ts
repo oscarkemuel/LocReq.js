@@ -1,18 +1,17 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { router } from './routes';
-import {myDataSource} from './database';
+import { prisma } from './database';
 
 dotenv.config();
 const port = process.env.PORT;
 
-myDataSource.initialize()
+prisma.$connect()
 .then(() => {
-  console.log("Data Source has been initialized!")
-})
-.catch((err) => {
-  console.error("Error during Data Source initialization:", err)
-})
+  console.log('Prisma connected');
+}).catch((err) => {
+  console.log('Prisma error', err);
+});
 
 const app = express();
 app.use(express.json());

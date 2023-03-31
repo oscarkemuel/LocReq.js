@@ -1,15 +1,11 @@
+import { PrismaClient } from '@prisma/client';
 import exp from 'constants';
-import { DataSource } from 'typeorm';
 
-const myDataSource = new DataSource({
-  type: "sqlite",
-  database: "db",
-  logging: true,
-  synchronize: true,
-  migrationsRun: true,
-  entities: ["src/infra/typeorm/entities/*.ts"],
-  migrations: ["src/database/migrations/*.ts"],
-})
+const prsimaClient = new PrismaClient({
+  log: ['query', 'info', 'warn', 'error'],
+});
 
-export  {myDataSource};
+export { prsimaClient };
+
+
 
