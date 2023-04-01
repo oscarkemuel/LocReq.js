@@ -4,12 +4,6 @@ import { UserService } from '../services/usersService';
 class UserController {
   private usersService = new UserService();
 
-  async index(_: Request, res: Response) {
-    const users = await this.usersService.index();
-    
-    return res.json({users});
-  }
-
   async create(req: Request, res: Response) {
     const { name, email, password } = req.body;
 

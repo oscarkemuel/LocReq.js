@@ -1,22 +1,18 @@
 import { User } from "@prisma/client";
-import { prsimaClient } from "../database";
+import { prismaClient } from "../database";
 import { ICreateUserDTO } from "../dtos/ICreateUserDTO";
 import { IUsersRepository } from "./IUsersRepository";
-
+import bcrypt from 'bcryptjs';
 class UsersRepository implements IUsersRepository{
   private repository;
 
   constructor() {
-    this.repository = prsimaClient.user;
+    this.repository = prismaClient.user;
   }
-
-  async index(): Promise<User[]> {
-    const users = await this.repository.findMany();
-
-    return users;
-  }
-
+  
   async create( userPayload : ICreateUserDTO): Promise<User> {
+    userPayload.password = await bcrypt.hash(userPayload.password, 8);
+    
     const user = await this.repository.create({
       data: userPayload
     });

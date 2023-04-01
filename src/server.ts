@@ -2,13 +2,13 @@ import 'express-async-errors';
 import express from 'express';
 import dotenv from 'dotenv';
 import { router } from './routes';
-import { prsimaClient } from './database';
+import { prismaClient } from './database';
 import { errorMiddleware } from './middlewares/error';
 
 dotenv.config();
 const port = process.env.PORT;
 
-prsimaClient.$connect()
+prismaClient.$connect()
 .then(() => {
   console.log('Prisma connected');
 }).catch((err) => {
