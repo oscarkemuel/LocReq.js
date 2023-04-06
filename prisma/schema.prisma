@@ -11,25 +11,35 @@ datasource db {
 }
 
 model User {
-  id             String          @id @default(uuid())
-  name           String
-  email          String          @unique
-  password       String
-  isAdmin        Boolean         @default(false) @map("is_admin")
-  creaqtedAt     DateTime        @default(now()) @map("created_at")
-  DeliveryPerson DeliveryPerson?
-  Customer       Customer?
-  Notification   Notification[]
+  id         String    @id @default(uuid())
+  name       String
+  email      String    @unique
+  password   String
+  isAdmin    Boolean   @default(false) @map("is_admin")
+  creaqtedAt DateTime  @default(now()) @map("created_at")
+  Seller     Seller?
+  Customer   Customer?
 }
 
-model DeliveryPerson {
+model Address {
+  id            String          @id @default(uuid())
+  street        String
+  number        String
+  complement    String?
+  neighborhood  String
+  city          String
+  state         String
+  zipCode       String          @map("zip_code")
+  CustomerPlace CustomerPlace[]
+}
+
+model Seller {
   id              String            @id @default(uuid())
   phone           String            @unique
   balance         Float
   userId          String            @unique @map("user_id")
   user            User              @relation(fields: [userId], references: [id])
   DeliveryRequest DeliveryRequest[]
-  addresses       Address[]
 }
 
 model Customer {
@@ -38,62 +48,30 @@ model Customer {
   userId String @unique @map("user_id")
   user   User   @relation(fields: [userId], references: [id])
 
-  addresses       Address[]
   DeliveryRequest DeliveryRequest[]
-  PaymentMethod   PaymentMethod[]
+  CustomerPlace   CustomerPlace[]
 }
 
-model Address {
-  id               String            @id @default(uuid())
-  street           String
-  number           String
-  complement       String?
-  neighborhood     String
-  city             String
-  state            String
-  zip_code         String
-  customerId       String?           @map("customer_id")
-  deliveryPersonId String?           @map("delivery_person_id")
-  customer         Customer?         @relation(fields: [customerId], references: [id])
-  deliveryPerson   DeliveryPerson?   @relation(fields: [deliveryPersonId], references: [id])
-  DeliveryRequest  DeliveryRequest[]
+model CustomerPlace {
+  id              String            @id @default(uuid())
+  name            String
+  addressId       String            @map("address_id")
+  address         Address           @relation(fields: [addressId], references: [id])
+  customerId      String            @map("customer_id")
+  customer        Customer          @relation(fields: [customerId], references: [id])
+  createdAt       DateTime          @default(now()) @map("created_at")
+  DeliveryRequest DeliveryRequest[]
 }
 
 model DeliveryRequest {
-  id               String           @id @default(uuid())
-  type             String
-  quantity         Int
-  delivery_time    DateTime
-  status           String
-  addressId        String           @map("address_id")
-  address          Address          @relation(fields: [addressId], references: [id])
-  customerId       String           @map("customer_id")
-  customer         Customer         @relation(fields: [customerId], references: [id])
-  deliveryPersonId String           @map("delivery_person_id")
-  deliveryPerson   DeliveryPerson   @relation(fields: [deliveryPersonId], references: [id])
-  DeliveryRating   DeliveryRating[]
-}
-
-model DeliveryRating {
-  id                String          @id @default(uuid())
-  rating            Int
-  comment           String?
-  deliveryRequestId String          @map("delivery_request_id")
-  deliveryRequest   DeliveryRequest @relation(fields: [deliveryRequestId], references: [id])
-}
-
-model Notification {
-  id      String @id @default(uuid())
-  type    String
-  message String
-  userId  String @map("user_id")
-  user    User   @relation(fields: [userId], references: [id])
-}
-
-model PaymentMethod {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  customerId  String   @map("customer_id")
-  customer    Customer @relation(fields: [customerId], references: [id])
+  id            String        @id @default(uuid())
+  quantity      Int
+  delivery_time DateTime
+  status        String
+  placeId       String        @map("place_id")
+  place         CustomerPlace @relation(fields: [placeId], references: [id])
+  customerId    String        @map("customer_id")
+  customer      Customer      @relation(fields: [customerId], references: [id])
+  sellerId      String        @map("seller_id")
+  seller        Seller        @relation(fields: [sellerId], references: [id])
 }
