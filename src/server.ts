@@ -10,7 +10,7 @@ const port = process.env.PORT;
 
 prismaClient.$connect()
 .then(() => {
-  console.log('Prisma connected');
+  console.log('📦 - Prisma connected!');
 }).catch((err) => {
   console.log('Prisma error', err);
 });
@@ -21,9 +21,9 @@ app.use(router)
 app.use(errorMiddleware)
 
 app.get('/', (req, res) => {
-  res.send('Expresss + TypeScript Server');
+  res.send('Hello!');
 });
 
 app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+  console.log(`🚪 - Server is running at port ${port}`);
 });
