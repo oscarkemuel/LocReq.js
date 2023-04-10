@@ -1,10 +1,12 @@
 import { User } from "@prisma/client";
 import { ICreateUserDTO } from "../dtos/ICreateUserDTO";
 
+type UserWithoutPassword = Omit<User, 'password'>;
+
 interface IUsersRepository {
-  create(data: ICreateUserDTO): Promise<User>;
+  create(data: ICreateUserDTO): Promise<UserWithoutPassword>;
   findByEmail(email: string): Promise<User | null>;
   findById(id: string): Promise<User | null>;
 }
 
-export { IUsersRepository };
+export { IUsersRepository, UserWithoutPassword };

@@ -19,6 +19,16 @@ class CustomersRepository implements ICustomersRepository {
     return customer;
   }
 
+  async findByUserId(userId: string): Promise<Customer | null> {
+    const customer = await this.repository.findFirst({
+      where: {
+        userId
+      }
+    });
+
+    return customer;
+  }
+
   async findByPhone(phone: string): Promise<Customer | null> {
     const customer = await this.repository.findFirst({
       where: {
@@ -47,13 +57,49 @@ class CustomersRepository implements ICustomersRepository {
         customerId
       },
       include: {
-        customer: true,
         address: true
       }
     });
 
     
     return places;
+  }
+
+  async findPlaceById(placeId: string): Promise<CustomerPlace | null> {
+    const place = await this.placeRepository.findFirst({
+      where: {
+        id: placeId
+      },
+      include: {
+        address: true
+      }
+    });
+
+    return place;
+  }
+
+  async deletePlace(placeId: string): Promise<CustomerPlace> {
+    const place = await this.placeRepository.delete({
+      where: {
+        id: placeId
+      }
+    });
+
+    return place;
+  }
+
+  async updatePlace(placeId: string, name: string, addressId: string): Promise<CustomerPlace> {
+    const place = await this.placeRepository.update({
+      where: {
+        id: placeId
+      },
+      data: {
+        name,
+        addressId
+      }
+    });
+
+    return place;
   }
 }
 
