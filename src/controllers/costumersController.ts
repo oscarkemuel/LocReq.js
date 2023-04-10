@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { NotFoundError } from '../helpers/apiErros';
 import { CustomersService } from '../services/customersService';
 
 class CustumersController {
@@ -35,10 +34,6 @@ class CustumersController {
     const { placeId } = req.params;
 
     const place = await this.custumersService.findPlace(placeId);
-
-    if(!place) {
-      throw new NotFoundError('Place not found');
-    }
 
     return res.status(200).json({ place });
   }
