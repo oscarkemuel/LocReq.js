@@ -29,5 +29,9 @@ sellersRouter.delete('/products/:productId', authMiddleware, (request, response)
   return sellersController.deleteProduct(request, response)
 })
 
+sellersRouter.get('/delivery-requests', authMiddleware, (request, response) => {
+  return sellersController.showDeliveryRequests(request, response)
+})
+
 
 export { sellersRouter }

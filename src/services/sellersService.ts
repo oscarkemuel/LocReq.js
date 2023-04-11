@@ -2,12 +2,14 @@ import { ICreateProductDTO } from "../dtos/ICreateProductDTO";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../helpers/apiErros";
 import { SellersRepository } from "../repositories/SellersRepository";
 import { AddressService } from "./addressService";
+import { DeliveryRequestService } from "./deliveryRequestService";
 import { ProductService } from "./productService";
 
 class SellersService {
   private sellersRepository = new SellersRepository();
   private addressService = new AddressService();
   private productService = new ProductService();
+  private deliveryRequestService = new DeliveryRequestService();
 
 
   async create(data: ICreateSellerDTO) {
@@ -119,6 +121,18 @@ class SellersService {
     }
 
     await this.productService.delete(productId);
+  }
+
+  async getMyRequests(userId: string) {
+    const seller = await this.getByUserId(userId);
+
+    if (!seller) {
+      throw new NotFoundError('Seller not found');
+    }
+
+    const requests = await this.deliveryRequestService.showBySellerId(seller.id);
+
+    return requests;
   }
 }
 

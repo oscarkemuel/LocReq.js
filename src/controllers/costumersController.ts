@@ -54,6 +54,28 @@ class CustumersController {
 
     return res.status(200).json({ place });
   }
+
+  async createDeliveryRequest(req: Request, res: Response) {
+    const { placeId, productId, quantity } = req.body;
+
+    const deliveryRequest = await this.custumersService.createDeliveryRequest({
+      customerId: req.user.id,
+      placeId,
+      productId,
+      quantity,
+      delivery_time: new Date(),
+      sellerId: '',
+      status: ''
+    });
+
+    return res.status(201).json({ deliveryRequest });
+  }
+
+  async showMyDeliveryRequests(req: Request, res: Response) {
+    const deliveryRequests = await this.custumersService.showMyDeliveryRequests(req.user.id);
+
+    return res.status(200).json({ deliveryRequests });
+  }
 }
 
 export { CustumersController };

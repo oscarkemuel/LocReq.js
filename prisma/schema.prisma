@@ -88,6 +88,6 @@ model DeliveryRequest {
   customer      Customer      @relation(fields: [customerId], references: [id])
   sellerId      String        @map("seller_id")
   seller        Seller        @relation(fields: [sellerId], references: [id])
-  Product       Product?      @relation(fields: [productId], references: [id])
-  productId     String?
+  Product       Product       @relation(fields: [productId], references: [id])
+  productId     String
 }

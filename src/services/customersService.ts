@@ -1,10 +1,15 @@
+import { ICreateDeliveryRequestDTO } from "../dtos/ICreateDeliveryRequestDTO";
 import { BadRequestError, NotFoundError } from "../helpers/apiErros";
 import { CustomersRepository } from "../repositories/CustomersRepository";
 import { AddressService } from "./addressService";
+import { DeliveryRequestService } from "./deliveryRequestService";
+import { ProductService } from "./productService";
 
 class CustomersService {
   private customerRepository = new CustomersRepository();
   private addressService = new AddressService();
+  private productService = new ProductService();
+  private deliveryRequestService = new DeliveryRequestService();
 
   async create(data: ICreateCustomerDTO) {
     const customerWithPhoneAlreadyExists = await this.customerRepository.findByPhone(data.phone);
@@ -21,6 +26,10 @@ class CustomersService {
 
   async getByUserId(userId: string) {
     const customer = await this.customerRepository.findByUserId(userId);
+
+    if (!customer) {
+      throw new NotFoundError('Customer not found');
+    }
 
     return customer;
   }
@@ -85,6 +94,45 @@ class CustomersService {
     const updatedPlace = await this.customerRepository.updatePlace(placeId, data.name, addressId);
 
     return updatedPlace;
+  }
+
+  async createDeliveryRequest(data: ICreateDeliveryRequestDTO) {
+    const customer = await this.getByUserId(data.customerId);
+    const place = await this.findPlace(data.placeId);
+    const product = await this.productService.showById(data.productId);
+
+    if (place.customerId !== customer.id) {
+      throw new BadRequestError('Place does not belong to customer');
+    }
+
+    await this.productService.decrementQuantity(product.id, data.quantity);
+    
+    const payload = {
+      status: 'pending',
+      quantity: data.quantity,
+      delivery_time: new Date(),
+      sellerId: product.sellerId,
+      productId: product.id,
+      placeId: place.id,
+      customerId: customer.id
+    }
+    
+    const deliveryRequest = await this.deliveryRequestService.create(payload);
+
+
+    return deliveryRequest;
+  }
+
+  async showMyDeliveryRequests(userId: string) {
+    const customer = await this.getByUserId(userId);
+
+    if (!customer) {
+      throw new NotFoundError('Customer not found');
+    }
+
+    const deliveryRequests = await this.deliveryRequestService.showByCustomerId(customer.id);
+
+    return deliveryRequests;
   }
 }
 

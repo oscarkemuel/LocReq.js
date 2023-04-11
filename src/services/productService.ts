@@ -54,6 +54,26 @@ class ProductService {
 
     return products;
   }
+
+  async decrementQuantity(id: string, quantity: number) {
+    const product = await this.productRepository.showById(id);
+
+    if (!product) {
+      throw new NotFoundError('Product not found');
+    }
+
+    console.log(product.quantity, quantity)
+
+    if(product.quantity < quantity) {
+      throw new NotFoundError('Insufficient quantity');
+    }
+
+    const newQuantity = product.quantity - quantity;
+
+    const newProduct = await this.productRepository.update(id, { ...product, quantity: newQuantity });
+
+    return newProduct;
+  }
 }
 
 export { ProductService }
