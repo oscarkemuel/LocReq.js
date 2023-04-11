@@ -1,6 +1,7 @@
 import { ICreateDeliveryRequestDTO } from "../dtos/ICreateDeliveryRequestDTO";
 import { BadRequestError, NotFoundError } from "../helpers/apiErros";
 import { CustomersRepository } from "../repositories/CustomersRepository";
+import { PlaceRepository } from "../repositories/PlaceRepository";
 import { AddressService } from "./addressService";
 import { DeliveryRequestService } from "./deliveryRequestService";
 import { ProductService } from "./productService";
@@ -10,6 +11,7 @@ class CustomersService {
   private addressService = new AddressService();
   private productService = new ProductService();
   private deliveryRequestService = new DeliveryRequestService();
+  private placeRepository = new PlaceRepository();
 
   async create(data: ICreateCustomerDTO) {
     const customerWithPhoneAlreadyExists = await this.customerRepository.findByPhone(data.phone);
@@ -43,7 +45,7 @@ class CustomersService {
 
     const {id: addressId} = await this.addressService.create(data.address);
     
-    const place = await this.customerRepository.createPlace(addressId, costumer.id, data.name);
+    const place = await this.placeRepository.createPlace(addressId, costumer.id, data.name);
   
     return place;
   }
@@ -55,13 +57,13 @@ class CustomersService {
       throw new NotFoundError('Customer not found');
     }
 
-    const places = await this.customerRepository.showPlaces(costumer.id);
+    const places = await this.placeRepository.showPlaces(costumer.id);
   
     return places;
   }
 
   async findPlace(placeId: string) {
-    const place = await this.customerRepository.findPlaceById(placeId);
+    const place = await this.placeRepository.findPlaceById(placeId);
 
     if (!place) {
       throw new NotFoundError('Place not found');
@@ -77,7 +79,7 @@ class CustomersService {
       throw new NotFoundError('Place not found');
     }
 
-    const deletedPlace = await this.customerRepository.deletePlace(placeId);
+    const deletedPlace = await this.placeRepository.deletePlace(placeId);
 
     return deletedPlace;
   }
@@ -91,7 +93,7 @@ class CustomersService {
 
     const {id: addressId} = await this.addressService.create(data.address);
 
-    const updatedPlace = await this.customerRepository.updatePlace(placeId, data.name, addressId);
+    const updatedPlace = await this.placeRepository.updatePlace(placeId, data.name, addressId);
 
     return updatedPlace;
   }
