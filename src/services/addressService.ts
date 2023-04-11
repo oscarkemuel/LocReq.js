@@ -12,6 +12,10 @@ class AddressService {
 
     return newAddress;
   }
+
+  async delete(id: string) {
+    await this.addressRepository.delete(id);
+  }
 }
 
 export { AddressService };

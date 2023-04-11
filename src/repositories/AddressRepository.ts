@@ -16,6 +16,14 @@ class AddressRepository implements IAddressRepository {
 
     return newAddress;
   }
+
+  async delete(id: string): Promise<void> {
+    await this.repository.delete({
+      where: {
+        id
+      }
+    });
+  }
 }
 
 export { AddressRepository };

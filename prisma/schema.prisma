@@ -31,6 +31,7 @@ model Address {
   state         String
   zipCode       String          @map("zip_code")
   CustomerPlace CustomerPlace[]
+  Seller        Seller[]
 }
 
 model Seller {
@@ -38,6 +39,8 @@ model Seller {
   phone           String            @unique
   userId          String            @unique @map("user_id")
   user            User              @relation(fields: [userId], references: [id])
+  addressId       String            @map("address_id")
+  address         Address           @relation(fields: [addressId], references: [id])
   DeliveryRequest DeliveryRequest[]
 }
 

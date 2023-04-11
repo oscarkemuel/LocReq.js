@@ -1,6 +1,6 @@
 import { Seller } from "@prisma/client";
 import { prismaClient } from "../database";
-import { ISellersRepository } from "./ISellersRepository";
+import { ICreateSellerDTO, ISellersRepository } from "./ISellersRepository";
 
 class SellersRepository implements ISellersRepository {
   private repository;
@@ -11,7 +11,7 @@ class SellersRepository implements ISellersRepository {
 
   async create(data: ICreateSellerDTO): Promise<Seller> {
     const seller = await this.repository.create({
-      data,
+      data
     });
 
     return seller;
