@@ -11,7 +11,7 @@ router.use('/api/users', usersRouter);
 router.use('/api/auth', authRouter);
 
 router.use('/api/customers', customersRouter);
-router.use('/api/customers/places', placesRouter)
+router.use('/api/customers/place', placesRouter)
 
 router.use('/api/sellers', sellersRouter)
 
