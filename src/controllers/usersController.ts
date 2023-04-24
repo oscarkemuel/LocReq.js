@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
 import { UserService } from '../services/usersService';
+import { validateSchema } from '../validations';
+import { createUserSchema } from '../validations/User/createUser';
 
 class UserController {
   private usersService = new UserService();
 
   async create(req: Request, res: Response) {
-    const { name, email, password } = req.body;
+    const { body: payload } = await validateSchema(createUserSchema, req)
 
-    const newUser = await this.usersService.create({ name, email, password });
+    const newUser = await this.usersService.create(payload);
 
     return res.status(201).json({user: newUser});
   }

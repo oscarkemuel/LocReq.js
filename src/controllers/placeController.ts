@@ -1,14 +1,17 @@
 import { Request, Response } from 'express';
 import { PlaceService } from '../services/placeService';
+import { validateSchema } from '../validations';
+import { createPlaceSchema } from '../validations/Place/createPlace';
+import { updatePlaceSchema } from '../validations/Place/updatePlace';
 
 class PlaceController {
   private placeService = new PlaceService();
 
   async create(req: Request, res: Response) {
-    const { name, address } = req.body;
+    const { body: payload } = await validateSchema(createPlaceSchema, req);
     const user = req.user;
 
-    const place = await this.placeService.create({ name, address, userId: user.id });
+    const place = await this.placeService.create({ ...payload, userId: user.id });
 
     return res.status(201).json({ place });
   }
@@ -30,10 +33,10 @@ class PlaceController {
   }
 
   async update(req: Request, res: Response) {
-    const { placeId } = req.params;
-    const { name, address } = req.body;
+    const { body: payload, params: {placeId} } = 
+      await validateSchema(updatePlaceSchema, req);
 
-    const place = await this.placeService.update(placeId, { name, address, userId: req.user.id });
+    const place = await this.placeService.update(placeId, { ...payload, userId: req.user.id });
 
     return res.status(200).json({ place });
   }

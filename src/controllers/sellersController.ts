@@ -1,24 +1,29 @@
 import { Request, Response } from 'express';
 import { SellersService } from '../services/sellersService';
+import { validateSchema } from '../validations';
+import { createSellerSchema } from '../validations/Seller/createSeller';
+import { createProductSchema } from '../validations/Product/createProduct';
+import { updateProductSchema } from '../validations/Product/updateProduct';
 class SellersController {
   private sellersService = new SellersService();
 
   async create(req: Request, res: Response) {
-    const { phone, address } = req.body;
+    const { body: payload } = await validateSchema(createSellerSchema, req);
     const user = req.user;
 
-    const payload = {phone, userId: user.id, address}
-    const newSeller = await this.sellersService.create(payload);
+    const newSeller = await this.sellersService.create({...payload, userId: user.id});
 
     return res.status(201).json({ seller: newSeller });
   }
 
   async createProduct(req: Request, res: Response) {
-    const { name, description, price, quantity } = req.body;
+    const { body: payload } = await validateSchema(createProductSchema, req);
     const user = req.user;
 
-    const payload = {name, description, price, sellerId: user.id, quantity}
-    const newProduct = await this.sellersService.createProduct(payload);
+    const newProduct = await this.sellersService.createProduct({ 
+      sellerId: user.id, 
+      ...payload 
+    });
 
     return res.status(201).json({ product: newProduct });
   }
@@ -41,14 +46,13 @@ class SellersController {
   }
 
   async updateProduct(req: Request, res: Response) {
-    const { productId } = req.params;
-    const { name, description, price, quantity } = req.body;
+    const { body: payload, params: { productId } } = await validateSchema(updateProductSchema, req);
     const user = req.user;
     
-
-    const payload = {name, description, price, quantity, sellerId: user.id}
-
-    const newProduct = await this.sellersService.updateProduct(user.id, productId, payload);
+    const newProduct = await this.sellersService.updateProduct(user.id, productId, {
+      ...payload,
+      sellerId: user.id
+    });
 
     return res.status(200).json({ product: newProduct });
   }

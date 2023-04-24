@@ -1,21 +1,20 @@
 import { Request, Response } from 'express';
-import { CustomersService } from '../services/customersService';
 import { DeliveryRequestService } from '../services/deliveryRequestService';
+import { validateSchema } from '../validations';
+import { createDeliveryRequestSchema } from '../validations/DeliveryRequest/createDeliveryRequest';
 
 class DeliveryRequestController {
   private deliveryRequestService = new DeliveryRequestService();
 
   async create(req: Request, res: Response) {
-    const { placeId, productId, quantity } = req.body;
+    const { body: payload }= await validateSchema(createDeliveryRequestSchema, req);
 
     const deliveryRequest = await this.deliveryRequestService.create({
       customerId: req.user.id,
-      placeId,
-      productId,
-      quantity,
       delivery_time: new Date(),
       sellerId: '',
-      status: ''
+      status: '',
+      ... payload
     });
 
     return res.status(201).json({ deliveryRequest });
