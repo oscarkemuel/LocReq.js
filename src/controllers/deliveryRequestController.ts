@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { DeliveryRequestService } from '../services/deliveryRequestService';
 import { validateSchema } from '../validations';
 import { createDeliveryRequestSchema } from '../validations/DeliveryRequest/createDeliveryRequest';
+import { updateDeliveryRequestStatusSchema } from '../validations/DeliveryRequest/updateDeliveryRequestStatus';
 
 class DeliveryRequestController {
   private deliveryRequestService = new DeliveryRequestService();
@@ -21,6 +22,24 @@ class DeliveryRequestController {
     const deliveryRequests = await this.deliveryRequestService.showByCustomer(req.user.id);
 
     return res.status(200).json({ deliveryRequests });
+  }
+
+  async showBySeller(req: Request, res: Response) {
+    const { id: userId } = req.user;
+
+    const deliveryRequests = await this.deliveryRequestService.showBySellerId(userId);
+
+    return res.status(200).json({ deliveryRequests });
+  }
+
+  async updateStatus(req: Request, res: Response) {
+    const { body: { status }, params: { deliveryRequestId } } = 
+      await validateSchema(updateDeliveryRequestStatusSchema, req);
+    const { id: userId } = req.user;
+
+    const deliveryRequest = await this.deliveryRequestService.updateStatus(userId, deliveryRequestId, status);
+
+    return res.status(200).json({ deliveryRequest });
   }
 }
 

@@ -1,15 +1,17 @@
 import { ICreateDeliveryRequestDTO } from "../dtos/ICreateDeliveryRequestDTO";
-import { BadRequestError, NotFoundError } from "../helpers/apiErros";
+import { BadRequestError, NotFoundError, UnauthorizedError } from "../helpers/apiErros";
 import { DeliveryRequestRepository } from "../repositories/DeliveryRequestRepository";
 import { CustomersService } from "./customersService";
 import { PlaceService } from "./placeService";
 import { ProductService } from "./productService";
+import { SellersService } from "./sellersService";
 
 class DeliveryRequestService {
   private deliveryRequestRepository = new DeliveryRequestRepository();
   private placeService = new PlaceService();
   private productService = new ProductService();
   private customerService = new CustomersService();
+  private sellerService = new SellersService();
 
   async create(data: Omit<ICreateDeliveryRequestDTO, 'delivery_time' | 'status' | 'sellerId'>) {
     const customer = await this.customerService.getByUserId(data.customerId);
@@ -47,13 +49,19 @@ class DeliveryRequestService {
     return deliveryRequest;
   }
 
-  async updateStatus(id: string, status: string) {
-    const deliveryRequest = await this.deliveryRequestRepository.showById(id);
+  async updateStatus(userId: string, id: string, status: string) {
+    const seller = await this.sellerService.getByUserId(userId);
 
+    const deliveryRequest = await this.deliveryRequestRepository.showById(id);
+    
     if (!deliveryRequest) {
       throw new NotFoundError('Delivery request not found');
     }
 
+    if(deliveryRequest.sellerId !== seller.id) {
+      throw new UnauthorizedError('You are not allowed to update this delivery request');
+    }
+    
     const newDeliveryRequest = await this.deliveryRequestRepository.updateStatus(id, status);
 
     return newDeliveryRequest;
@@ -65,8 +73,14 @@ class DeliveryRequestService {
     return deliveryRequests;
   }
 
-  async showBySellerId(sellerId: string) {
-    const deliveryRequests = await this.deliveryRequestRepository.showBySellerId(sellerId);
+  async showBySellerId(userId: string) {
+    const seller = await this.sellerService.getByUserId(userId)
+
+    if (!seller) {
+      throw new NotFoundError('Seller not found');
+    }
+    
+    const deliveryRequests = await this.deliveryRequestRepository.showBySellerId(seller.id);
 
     return deliveryRequests;
   }

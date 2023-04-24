@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { router } from './routes';
 import { prismaClient } from './database';
 import { errorMiddleware } from './middlewares/error';
+// import { listRoutes } from './utils/listRoutes';
 
 dotenv.config();
 const port = process.env.PORT;
@@ -25,6 +26,8 @@ prismaClient.$connect()
   app.listen(port, () => {
     console.log(`🚪 - Server is running at port ${port}`);
   });
+
+  // listRoutes(app);
 }).catch((err) => {
   console.log('Prisma error', err);
 });

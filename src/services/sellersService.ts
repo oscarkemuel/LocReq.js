@@ -2,14 +2,12 @@ import { ICreateProductDTO } from "../dtos/ICreateProductDTO";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../helpers/apiErros";
 import { SellersRepository } from "../repositories/SellersRepository";
 import { AddressService } from "./addressService";
-import { DeliveryRequestService } from "./deliveryRequestService";
 import { ProductService } from "./productService";
 
 class SellersService {
   private sellersRepository = new SellersRepository();
   private addressService = new AddressService();
   private productService = new ProductService();
-  private deliveryRequestService = new DeliveryRequestService();
 
   async create(data: ICreateSellerDTO) {
     const sellerWithPhoneAlreadyExists = await this.sellersRepository.findByPhone(data.phone);
@@ -30,8 +28,22 @@ class SellersService {
     return newSeller;
   }
 
+  async showById(id: string) {
+    const seller = await this.sellersRepository.showById(id);
+
+    if (!seller) {
+      throw new NotFoundError('Seller not found');
+    }
+
+    return seller;
+  }
+
   async getByUserId(userId: string) {
     const seller = await this.sellersRepository.findByUserId(userId);
+
+    if (!seller) {
+      throw new NotFoundError('Seller not found');
+    }
 
     return seller;
   }
@@ -120,36 +132,6 @@ class SellersService {
     }
 
     await this.productService.delete(productId);
-  }
-
-  async getMyRequests(userId: string) {
-    const seller = await this.getByUserId(userId);
-
-    if (!seller) {
-      throw new NotFoundError('Seller not found');
-    }
-
-    const requests = await this.deliveryRequestService.showBySellerId(seller.id);
-
-    return requests;
-  }
-
-  async updateRequestStatus(userId: string, requestId: string, status: string) {
-    const seller = await this.getByUserId(userId);
-
-    if (!seller) {
-      throw new NotFoundError('Seller not found');
-    }
-
-    const request = await this.deliveryRequestService.showById(requestId);
-
-    if (request.sellerId !== seller.id) {
-      throw new UnauthorizedError('You can only update your own requests');
-    }
-
-    const newRequest = await this.deliveryRequestService.updateStatus(requestId, status);
-
-    return newRequest;
   }
 }
 

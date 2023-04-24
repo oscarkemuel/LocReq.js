@@ -66,24 +66,6 @@ class SellersController {
 
     return res.status(204).json();
   }
-
-  async showDeliveryRequests(req: Request, res: Response) {
-    const user = req.user;
-
-    const deliveryRequests = await this.sellersService.getMyRequests(user.id);
-
-    return res.status(200).json({ deliveryRequests });
-  }
-
-  async updateDeliveryRequestStatus(req: Request, res: Response) {
-    const { body: { status }, params: { deliveryRequestId } } = 
-      await validateSchema(updateDeliveryRequestStatusSchema, req);
-    const user = req.user;
-
-    const deliveryRequest = await this.sellersService.updateRequestStatus(user.id, deliveryRequestId, status);
-
-    return res.status(200).json({ deliveryRequest });
-  }
 }
 
 export { SellersController }

@@ -14,8 +14,9 @@ router.use('/api/auth', authRouter);
 
 router.use('/api/customers', authMiddleware, customersRouter);
 router.use('/api/customers/place', authMiddleware, placesRouter);
-router.use('/api/customers/delivery-request', authMiddleware, deliveryRequestRouter);
 
 router.use('/api/sellers', authMiddleware, sellersRouter);
+
+router.use('/api/delivery-request', authMiddleware, deliveryRequestRouter);
 
 export { router };

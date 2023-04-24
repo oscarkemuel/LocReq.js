@@ -36,6 +36,16 @@ class SellersRepository implements ISellersRepository {
 
     return seller;
   }
+
+  async showById(id: string): Promise<Seller | null> {
+    const seller = await this.repository.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    return seller;
+  }
 }
 
 export { SellersRepository };
