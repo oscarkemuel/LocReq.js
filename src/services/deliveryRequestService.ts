@@ -11,7 +11,7 @@ class DeliveryRequestService {
   private productService = new ProductService();
   private customerService = new CustomersService();
 
-  async create(data: ICreateDeliveryRequestDTO) {
+  async create(data: Omit<ICreateDeliveryRequestDTO, 'delivery_time' | 'status' | 'sellerId'>) {
     const customer = await this.customerService.getByUserId(data.customerId);
     const place = await this.placeService.show(data.placeId);
     const product = await this.productService.showById(data.productId);
@@ -35,6 +35,28 @@ class DeliveryRequestService {
     const deliveryRequest = await this.deliveryRequestRepository.create(payload);
 
     return deliveryRequest;
+  }
+
+  async showById(id: string) {
+    const deliveryRequest = await this.deliveryRequestRepository.showById(id);
+
+    if (!deliveryRequest) {
+      throw new NotFoundError('Delivery request not found');
+    }
+
+    return deliveryRequest;
+  }
+
+  async updateStatus(id: string, status: string) {
+    const deliveryRequest = await this.deliveryRequestRepository.showById(id);
+
+    if (!deliveryRequest) {
+      throw new NotFoundError('Delivery request not found');
+    }
+
+    const newDeliveryRequest = await this.deliveryRequestRepository.updateStatus(id, status);
+
+    return newDeliveryRequest;
   }
 
   async showByCustomerId(customerId: string) {

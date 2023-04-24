@@ -45,6 +45,19 @@ class DeliveryRequestRepository implements IDeliveryRequestRepository {
     return deliveryRequest;
   }
 
+  async updateStatus(id: string, status: string): Promise<DeliveryRequest> {
+    const deliveryRequest = await this.repository.update({
+      where: {
+        id
+      },
+      data: {
+        status
+      }
+    });
+
+    return deliveryRequest;
+  }
+
   async delete(id: string): Promise<void> {
     await this.repository.delete({
       where: {

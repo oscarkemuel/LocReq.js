@@ -10,8 +10,9 @@ export const errorMiddleware = (
 ) => {
 	if(error instanceof ZodError) {
 		return res.status(400).json({
+			path: error.issues[0].path[1] ?? '',
 			message: error.issues[0].message,
-			code: error.issues[0].code
+			code: error.issues[0].code,
 		})
 	}
 

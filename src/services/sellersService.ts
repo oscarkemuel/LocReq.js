@@ -11,7 +11,6 @@ class SellersService {
   private productService = new ProductService();
   private deliveryRequestService = new DeliveryRequestService();
 
-
   async create(data: ICreateSellerDTO) {
     const sellerWithPhoneAlreadyExists = await this.sellersRepository.findByPhone(data.phone);
     const sellerWithUserIdAlreadyExists = await this.sellersRepository.findByUserId(data.userId);
@@ -133,6 +132,24 @@ class SellersService {
     const requests = await this.deliveryRequestService.showBySellerId(seller.id);
 
     return requests;
+  }
+
+  async updateRequestStatus(userId: string, requestId: string, status: string) {
+    const seller = await this.getByUserId(userId);
+
+    if (!seller) {
+      throw new NotFoundError('Seller not found');
+    }
+
+    const request = await this.deliveryRequestService.showById(requestId);
+
+    if (request.sellerId !== seller.id) {
+      throw new UnauthorizedError('You can only update your own requests');
+    }
+
+    const newRequest = await this.deliveryRequestService.updateStatus(requestId, status);
+
+    return newRequest;
   }
 }
 

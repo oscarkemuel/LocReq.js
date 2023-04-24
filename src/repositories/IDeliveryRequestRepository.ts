@@ -6,6 +6,7 @@ interface IDeliveryRequestRepository {
   show(): Promise<DeliveryRequest[]>;
   showById(id: string): Promise<DeliveryRequest | null>;
   update(id: string, data: ICreateDeliveryRequestDTO): Promise<DeliveryRequest>;
+  updateStatus(id: string, status: string): Promise<DeliveryRequest>;
   delete(id: string): Promise<void>;
   showBySellerId(sellerId: string): Promise<DeliveryRequest[]>;
   showByCustomerId(customerId: string): Promise<DeliveryRequest[]>;
