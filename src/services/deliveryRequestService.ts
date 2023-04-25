@@ -108,6 +108,12 @@ class DeliveryRequestService {
 
     return deliveryRequests;
   }
+
+  async showByPlaceId(placeId: string) {
+    const deliveryRequests = await this.deliveryRequestRepository.showByPlaceId(placeId);
+
+    return deliveryRequests;
+  }
 }
 
 export { DeliveryRequestService }

@@ -51,6 +51,14 @@ class DeliveryRequestController {
 
     return res.status(200).json({ deliveryRequests });
   }
+
+  async showByPlaceId(req: Request, res: Response) {
+    const { placeId } = req.params;
+
+    const deliveryRequests = await this.deliveryRequestService.showByPlaceId(placeId);
+
+    return res.status(200).json({ deliveryRequests });
+  }
 }
 
 export { DeliveryRequestController }

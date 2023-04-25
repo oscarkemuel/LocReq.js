@@ -11,6 +11,7 @@ interface IDeliveryRequestRepository {
   showBySellerId(sellerId: string): Promise<DeliveryRequest[]>;
   showByCustomerId(customerId: string): Promise<DeliveryRequest[]>;
   showByStatusBySellerId(sellerId: string, status: string): Promise<DeliveryRequest[]>;
+  showByPlaceId(placeId: string, status: string): Promise<DeliveryRequest[]>;
 }
 
 export {IDeliveryRequestRepository}
