@@ -24,4 +24,8 @@ placesRouter.put('/:placeId', (request, response) => {
   return placeController.update(request, response)
 })
 
+placesRouter.get('/:placeId/nearby-sellers', (request, response) => {
+  return placeController.findNearbySellers(request, response)
+})
+
 export { placesRouter }

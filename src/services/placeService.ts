@@ -69,6 +69,16 @@ class PlaceService {
 
     return updatedPlace;
   }
+
+  async findNearbySellers(placeId: string) {
+    const place = await this.show(placeId);
+    const address = await this.addressService.show(place.addressId);
+
+    const places = 
+      await this.addressService.findByNeighborhoodWithSeller(address.neighborhood);
+
+    return places;
+  }
 }
 
 export { PlaceService }

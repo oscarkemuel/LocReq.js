@@ -48,6 +48,14 @@ class PlaceController {
 
     return res.status(204).json();
   }
+
+  async findNearbySellers(req: Request, res: Response) {
+    const { placeId } = req.params;
+
+    const sellers = await this.placeService.findNearbySellers(placeId);
+
+    return res.status(200).json({ sellers });
+  }
 }
 
 export { PlaceController }
