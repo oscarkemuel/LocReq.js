@@ -85,6 +85,17 @@ class DeliveryRequestRepository implements IDeliveryRequestRepository {
 
     return deliveryRequests;
   }
+
+  async showByStatusBySellerId(sellerId: string, status: string): Promise<DeliveryRequest[]> {
+    const deliveryRequests = await this.repository.findMany({
+      where: {
+        status,
+        sellerId
+      }
+    });
+
+    return deliveryRequests;
+  }
 }
 
 export { DeliveryRequestRepository };

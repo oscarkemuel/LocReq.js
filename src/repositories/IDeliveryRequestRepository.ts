@@ -10,6 +10,7 @@ interface IDeliveryRequestRepository {
   delete(id: string): Promise<void>;
   showBySellerId(sellerId: string): Promise<DeliveryRequest[]>;
   showByCustomerId(customerId: string): Promise<DeliveryRequest[]>;
+  showByStatusBySellerId(sellerId: string, status: string): Promise<DeliveryRequest[]>;
 }
 
 export {IDeliveryRequestRepository}

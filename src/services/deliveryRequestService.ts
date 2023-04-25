@@ -96,6 +96,18 @@ class DeliveryRequestService {
 
     return deliveryRequests;
   }
+
+  async showByStatusBySellerId(userId: string, status: string) {
+    const seller = await this.sellerService.getByUserId(userId);
+
+    if (!seller) {
+      throw new NotFoundError('Seller not found');
+    }
+
+    const deliveryRequests = await this.deliveryRequestRepository.showByStatusBySellerId(seller.id, status);
+
+    return deliveryRequests;
+  }
 }
 
 export { DeliveryRequestService }

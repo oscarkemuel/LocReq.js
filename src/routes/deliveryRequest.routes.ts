@@ -4,20 +4,26 @@ import { DeliveryRequestController } from '../controllers/deliveryRequestControl
 const deliveryRequestRouter = Router()
 const deliveryRequestController = new DeliveryRequestController();
 
+// Customer
 deliveryRequestRouter.post('/', (request, response) => {
   return deliveryRequestController.create(request, response)
-})
-
-deliveryRequestRouter.patch('/:deliveryRequestId/status', (request, response) => {
-  return deliveryRequestController.updateStatus(request, response)
 })
 
 deliveryRequestRouter.get('/my-requests', (request, response) => {
   return deliveryRequestController.showByCustomer(request, response)
 })
 
+// Seller
+deliveryRequestRouter.patch('/:deliveryRequestId/status', (request, response) => {
+  return deliveryRequestController.updateStatus(request, response)
+})
+
 deliveryRequestRouter.get('/by-seller', (request, response) => {
   return deliveryRequestController.showBySeller(request, response)
+})
+
+deliveryRequestRouter.get('/by-seller/:status', (request, response) => {
+  return deliveryRequestController.showByStatusBySellerId(request, response)
 })
 
 export { deliveryRequestRouter }
