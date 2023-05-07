@@ -26,8 +26,6 @@ class CustomersService {
 
     return customer;
   }
-
-  
 }
 
 export { CustomersService };

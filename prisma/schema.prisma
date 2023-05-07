@@ -43,6 +43,7 @@ model Seller {
   address         Address           @relation(fields: [addressId], references: [id])
   DeliveryRequest DeliveryRequest[]
   Product         Product[]
+  FeedbackSeller  FeedbackSeller[]
 }
 
 model Product {
@@ -64,6 +65,7 @@ model Customer {
 
   DeliveryRequest DeliveryRequest[]
   CustomerPlace   CustomerPlace[]
+  FeedbackSeller  FeedbackSeller[]
 }
 
 model CustomerPlace {
@@ -90,4 +92,14 @@ model DeliveryRequest {
   seller        Seller        @relation(fields: [sellerId], references: [id])
   Product       Product       @relation(fields: [productId], references: [id])
   productId     String
+}
+
+model FeedbackSeller {
+  id         String   @id @default(uuid())
+  comment    String
+  rating     Float
+  customerId String   @map("customer_id")
+  customer   Customer @relation(fields: [customerId], references: [id])
+  sellerId   String   @map("seller_id")
+  seller     Seller   @relation(fields: [sellerId], references: [id])
 }
