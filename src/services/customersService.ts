@@ -8,8 +8,12 @@ class CustomersService {
     const customerWithPhoneAlreadyExists = await this.customerRepository.findByPhone(data.phone);
     const customerWithUserIdAlreadyExists = await this.customerRepository.findByUserId(data.userId);
     
-    if (customerWithPhoneAlreadyExists || customerWithUserIdAlreadyExists) {
+    if (customerWithUserIdAlreadyExists) {
       throw new BadRequestError('Customer already exists');
+    }
+
+    if (customerWithPhoneAlreadyExists) {
+      throw new BadRequestError('Phone already exists');
     }
     
     const newCustomer = await this.customerRepository.create(data);

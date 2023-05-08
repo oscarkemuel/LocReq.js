@@ -9,9 +9,11 @@ export const errorMiddleware = (
 	__: NextFunction
 ) => {
 	if(error instanceof ZodError) {
+		const path = error.issues[0].path[1]
+
 		return res.status(400).json({
-			path: error.issues[0].path[1] ?? '',
-			message: error.issues[0].message,
+			path: path ?? '',
+			message: path ? `${path} - ${error.issues[0].message.toLowerCase()}` : error.issues[0].message,
 			code: error.issues[0].code,
 		})
 	}
