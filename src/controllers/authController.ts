@@ -13,6 +13,14 @@ class AuthController {
 
     return res.json({user});
   }
+
+  async getUserByToken(req: Request, res: Response) {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    
+    const user = await this.authService.getUserByToken(token!);
+
+    return res.json({user});
+  }
 }
 
 export { AuthController };

@@ -16,13 +16,24 @@ class AuthService {
       throw new UnauthorizedError("Email/Password incorrect!");
     }
 
-    const token = jwt.sign({id: user.id}, process.env.JWT_SECRET!, {
+    const payload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt
+    }
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET!, {
       expiresIn: process.env.JWT_EXPIRES_IN
     });
 
-    const { password: _, ...userWithoutPassword } = user;
+    return {user: payload, token};
+  }
 
-    return {user: userWithoutPassword, token};
+  async getUserByToken(token: string) {
+    const payload = jwt.decode(token);
+
+    return payload;
   }
 }
 
