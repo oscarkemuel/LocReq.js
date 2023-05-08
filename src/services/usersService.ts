@@ -24,7 +24,9 @@ class UserService {
       throw new NotFoundError("User not found!");
     }
 
-    return user;
+    const rules = await this.usersRepository.findAllRoles(id);
+
+    return {...user, rules};
   }
 
   async showByEmail(email: string) {
@@ -34,7 +36,9 @@ class UserService {
       throw new NotFoundError("User not found!");
     }
 
-    return user;
+    const rules = await this.usersRepository.findAllRoles(user.id);
+
+    return {...user, rules};
   }
 }
 

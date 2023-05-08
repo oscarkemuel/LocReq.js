@@ -3,6 +3,7 @@ import { UserService } from './usersService';
 import bcrypt from 'bcryptjs';
 import { UnauthorizedError } from "../helpers/apiErros";
 import jwt from 'jsonwebtoken';
+import { isEqual } from 'lodash';
 
 class AuthService {
   private usersService = new UserService();
@@ -20,7 +21,8 @@ class AuthService {
       id: user.id,
       name: user.name,
       email: user.email,
-      createdAt: user.createdAt
+      createdAt: user.createdAt,
+      rules: user.rules
     }
 
     const token = jwt.sign(payload, process.env.JWT_SECRET!, {
@@ -31,9 +33,31 @@ class AuthService {
   }
 
   async getUserByToken(token: string) {
-    const payload = jwt.decode(token);
+    const oldPayload = jwt.decode(token) as { id: string, rules: string[] };
 
-    return payload;
+    if(!oldPayload) {
+      throw new UnauthorizedError("Invalid token!");
+    }
+
+    const user = await this.usersService.show(oldPayload.id);
+
+    if(!isEqual(user.rules, oldPayload.rules)) {
+      const payload = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: user.createdAt,
+        rules: user.rules
+      }
+
+      const token = jwt.sign(payload, process.env.JWT_SECRET!, {
+        expiresIn: process.env.JWT_EXPIRES_IN
+      });
+
+      return {user: payload, token};
+    }
+
+    return {user: oldPayload, token};
   }
 }
 

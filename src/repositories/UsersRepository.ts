@@ -47,6 +47,30 @@ class UsersRepository implements IUsersRepository{
 
     return user;
   }
+
+  async findAllRoles(id: string): Promise<string[]> {
+    const user = await this.repository.findFirst({
+      where: {
+        id
+      },
+      include: {
+        Customer: true,
+        Seller: true
+      }
+    })
+
+    const roles = [];
+
+    if(user?.Customer) {
+      roles.push("customer");
+    }
+
+    if(user?.Seller) {
+      roles.push("seller");
+    }
+
+    return roles;
+  }
 }
 
 export { UsersRepository };
