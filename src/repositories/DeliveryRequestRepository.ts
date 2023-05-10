@@ -80,6 +80,11 @@ class DeliveryRequestRepository implements IDeliveryRequestRepository {
     const deliveryRequests = await this.repository.findMany({
       where: {
         customerId
+      },
+      include: {
+        seller: true,
+        place: true,
+        Product: true
       }
     });
 
@@ -101,6 +106,11 @@ class DeliveryRequestRepository implements IDeliveryRequestRepository {
     const deliveryRequests = await this.repository.findMany({
       where: {
         placeId
+      },
+      include: {
+        seller: true,
+        place: true,
+        Product: true
       }
     });
 
