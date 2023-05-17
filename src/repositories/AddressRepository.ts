@@ -42,7 +42,9 @@ class AddressRepository implements IAddressRepository {
 })[]> {
     const addresses = await this.repository.findMany({
       where: {
-        neighborhood,
+        neighborhood: {
+          contains: neighborhood,
+        },
         Seller: {
           some: {}
         }

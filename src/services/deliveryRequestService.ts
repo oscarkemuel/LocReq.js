@@ -114,6 +114,25 @@ class DeliveryRequestService {
 
     return deliveryRequests;
   }
+
+  async cancel(userId: string, id: string) {
+    const deliveryRequest = await this.deliveryRequestRepository.showById(id);
+    const customer = await this.customerService.getByUserId(userId);
+
+    if (!deliveryRequest) {
+      throw new NotFoundError('Delivery request not found');
+    }
+
+    if (deliveryRequest.status === 'canceled') {
+      throw new BadRequestError('Delivery request already canceled');
+    }
+
+    if (deliveryRequest.customerId !== customer.id) {
+      throw new UnauthorizedError('You are not allowed to cancel this delivery request');
+    }
+
+    await this.deliveryRequestRepository.updateStatus(id, 'canceled');
+  }
 }
 
 export { DeliveryRequestService }

@@ -14,6 +14,9 @@ deliveryRequestRouter.get('/my-requests', (request, response) => {
 deliveryRequestRouter.get('/place/:placeId', (request, response) => {
   return deliveryRequestController.showByPlaceId(request, response)
 })
+deliveryRequestRouter.put('/cancel/:deliveryRequestId', (request, response) => {
+  return deliveryRequestController.cancel(request, response)
+})
 
 // Seller
 deliveryRequestRouter.patch('/:deliveryRequestId/status', (request, response) => {

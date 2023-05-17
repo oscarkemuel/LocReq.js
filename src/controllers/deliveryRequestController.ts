@@ -59,6 +59,15 @@ class DeliveryRequestController {
 
     return res.status(200).json({ deliveryRequests });
   }
+  
+  async cancel(req: Request, res: Response) {
+    const { id: userId } = req.user;
+    const { deliveryRequestId } = req.params;
+
+    const deliveryRequest = await this.deliveryRequestService.cancel(userId, deliveryRequestId);
+
+    return res.status(200).json({ deliveryRequest });
+  }
 }
 
 export { DeliveryRequestController }
