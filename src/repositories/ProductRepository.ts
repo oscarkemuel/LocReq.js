@@ -1,4 +1,4 @@
-import { Product } from "@prisma/client";
+import { Prisma, Product } from "@prisma/client";
 import { ICreateProductDTO } from "../dtos/ICreateProductDTO";
 import { IProductRepository } from "./IProductRepository";
 import { prismaClient } from "../database";
@@ -24,10 +24,15 @@ class ProductRepository implements IProductRepository {
     return products;
   }
 
-  async showById(id: string): Promise<Product | null> {
+  async showById(id: string): Promise<(Product & {
+    _count: Prisma.ProductCountOutputType;
+}) | null> {
     const product = await this.repository.findUnique({
       where: {
         id
+      },
+      include: {
+        _count: true
       }
     });
 
@@ -35,6 +40,7 @@ class ProductRepository implements IProductRepository {
   }
 
   async update(id: string, data: ICreateProductDTO): Promise<Product> {
+    console.log(data)
     const product = await this.repository.update({
       where: {
         id

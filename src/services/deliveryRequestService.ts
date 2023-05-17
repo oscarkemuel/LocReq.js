@@ -33,6 +33,8 @@ class DeliveryRequestService {
       placeId: place.id,
       customerId: customer.id
     }
+
+    console.log(payload);
     
     const deliveryRequest = await this.deliveryRequestRepository.create(payload);
 
@@ -125,6 +127,10 @@ class DeliveryRequestService {
 
     if (deliveryRequest.status === 'canceled') {
       throw new BadRequestError('Delivery request already canceled');
+    }
+
+    if(deliveryRequest.status !== 'pending') {
+      throw new BadRequestError('You are not allowed to cancel this delivery request');
     }
 
     if (deliveryRequest.customerId !== customer.id) {

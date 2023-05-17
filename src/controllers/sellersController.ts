@@ -66,6 +66,14 @@ class SellersController {
 
     return res.status(204).json();
   }
+
+  async showProductsBySellerId(req: Request, res: Response) {
+    const { sellerId } = req.params;
+
+    const products = await this.sellersService.showProductsBySellerId(sellerId);
+
+    return res.status(200).json({ products });
+  }
 }
 
 export { SellersController }

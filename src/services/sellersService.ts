@@ -133,6 +133,18 @@ class SellersService {
 
     await this.productService.delete(productId);
   }
+
+  async showProductsBySellerId(sellerId: string) {
+    const seller = await this.sellersRepository.showById(sellerId);
+
+    if (!seller) {
+      throw new NotFoundError('Seller not found');
+    }
+
+    const products = await this.productService.showBySellerId(sellerId);
+
+    return products;
+  }
 }
 
 export { SellersService }

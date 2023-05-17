@@ -28,4 +28,8 @@ sellersRouter.delete('/products/:productId', (request, response) => {
   return sellersController.deleteProduct(request, response)
 })
 
+sellersRouter.get('/:sellerId/products', (request, response) => {
+  return sellersController.showProductsBySellerId(request, response)
+})
+
 export { sellersRouter }

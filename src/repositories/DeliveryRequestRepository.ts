@@ -82,7 +82,11 @@ class DeliveryRequestRepository implements IDeliveryRequestRepository {
         customerId
       },
       include: {
-        seller: true,
+        seller: {
+          include: {
+            user: true
+          }
+        },
         place: true,
         Product: true
       }
@@ -108,7 +112,11 @@ class DeliveryRequestRepository implements IDeliveryRequestRepository {
         placeId
       },
       include: {
-        seller: true,
+        seller: {
+          include: {
+            user: true
+          }
+        },
         place: true,
         Product: true
       }
