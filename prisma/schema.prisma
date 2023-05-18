@@ -96,7 +96,7 @@ model DeliveryRequest {
 
 model FeedbackSeller {
   id         String   @id @default(uuid())
-  comment    String
+  comment    String?
   rating     Float
   customerId String   @map("customer_id")
   customer   Customer @relation(fields: [customerId], references: [id])

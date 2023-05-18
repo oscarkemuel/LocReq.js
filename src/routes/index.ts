@@ -6,6 +6,7 @@ import { sellersRouter } from './sellers.routes';
 import { placesRouter } from './place.routes';
 import { deliveryRequestRouter } from './deliveryRequest.routes';
 import authMiddleware from '../middlewares/auth';
+import { feedbackSellerRouter } from './feedbackSeller.routes';
 
 const router = Router();
 
@@ -18,5 +19,7 @@ router.use('/api/customers/place', authMiddleware, placesRouter);
 router.use('/api/sellers', authMiddleware, sellersRouter);
 
 router.use('/api/delivery-request', authMiddleware, deliveryRequestRouter);
+
+router.use('/api/feedback', authMiddleware, feedbackSellerRouter);
 
 export { router };

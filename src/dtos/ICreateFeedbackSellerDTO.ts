@@ -2,7 +2,7 @@ interface ICreateFeedbackSellerDTO {
   sellerId: string;
   customerId: string;
   rating: number;
-  comment: string;
+  comment?: string;
 }
 
 export {ICreateFeedbackSellerDTO}
