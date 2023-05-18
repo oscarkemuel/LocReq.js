@@ -70,8 +70,26 @@ class DeliveryRequestRepository implements IDeliveryRequestRepository {
     const deliveryRequests = await this.repository.findMany({
       where: {
         sellerId
+      },
+      include: {
+        customer: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                id: true
+              }
+            }
+          }
+        },
+        place: {
+          include: {
+            address: true
+          }
+        },
+        Product: true
       }
-    });
+    })
 
     return deliveryRequests;
   }
