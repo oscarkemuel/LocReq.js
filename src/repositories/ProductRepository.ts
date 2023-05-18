@@ -40,7 +40,6 @@ class ProductRepository implements IProductRepository {
   }
 
   async update(id: string, data: ICreateProductDTO): Promise<Product> {
-    console.log(data)
     const product = await this.repository.update({
       where: {
         id

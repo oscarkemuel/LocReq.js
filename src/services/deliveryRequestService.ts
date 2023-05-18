@@ -34,8 +34,6 @@ class DeliveryRequestService {
       customerId: customer.id
     }
 
-    console.log(payload);
-    
     const deliveryRequest = await this.deliveryRequestRepository.create(payload);
 
     return deliveryRequest;
