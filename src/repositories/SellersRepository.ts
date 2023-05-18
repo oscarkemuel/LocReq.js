@@ -42,6 +42,19 @@ class SellersRepository implements ISellersRepository {
       where: {
         id,
       },
+      include: {
+        user: true,
+        FeedbackSeller: {
+          include: {
+            customer: {
+              include: {
+                user: true,
+              }
+            }
+          }
+        },
+        address: true,
+      }
     });
 
     return seller;

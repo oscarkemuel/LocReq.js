@@ -8,6 +8,7 @@ interface ICreateSellerDTO {
 
 interface ISellersRepository {
   create(data: ICreateSellerDTO): Promise<Seller>;
+  showById(id: string): Promise<Seller | null>;
   findByPhone(phone: string): Promise<Seller | null>;
   findByUserId(userId: string): Promise<Seller | null>;
 }

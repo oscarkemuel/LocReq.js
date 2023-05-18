@@ -14,6 +14,24 @@ class FeedbackSellerController {
 
     return res.json({feedbackSeller});
   }
+
+  async delete(req: Request, res: Response) {
+    const { id } = req.params;
+    const user = req.user;
+
+    await this.feedbackSellerService.delete(id, user.id);
+
+    return res.status(204).send();
+  }
+
+  async customerHasFeedback(req: Request, res: Response) {
+    const { sellerId } = req.params;
+    const user = req.user;
+
+    const hasFeedback = await this.feedbackSellerService.customerHasFeedback(user.id, sellerId);
+
+    return res.json({hasFeedback});
+  }
 }
 
 export { FeedbackSellerController };
