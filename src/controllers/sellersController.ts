@@ -25,6 +25,14 @@ class SellersController {
     return res.status(200).json({ seller });
   }
 
+  async getMe(req: Request, res: Response) {
+    const user = req.user;
+
+    const seller = await this.sellersService.getMe(user.id);
+
+    return res.status(200).json({ seller });
+  }
+
   async createProduct(req: Request, res: Response) {
     const { body: payload } = await validateSchema(createProductSchema, req);
     const user = req.user;

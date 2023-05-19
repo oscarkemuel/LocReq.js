@@ -8,6 +8,10 @@ sellersRouter.post('/', (request, response) => {
   return sellersController.create(request, response)
 })
 
+sellersRouter.get('/me', (request, response) => {
+  return sellersController.getMe(request, response)
+})
+
 sellersRouter.get('/:sellerId/perfil', (request, response) => {
   return sellersController.showById(request, response)
 })

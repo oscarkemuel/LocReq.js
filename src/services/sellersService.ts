@@ -38,6 +38,16 @@ class SellersService {
     return seller;
   }
 
+  async getMe(userId: string) {
+    const seller = await this.sellersRepository.findByUserId(userId);
+
+    if (!seller) {
+      throw new NotFoundError('Seller not found');
+    }
+
+    return seller;
+  }
+
   async getByUserId(userId: string) {
     const seller = await this.sellersRepository.findByUserId(userId);
 
