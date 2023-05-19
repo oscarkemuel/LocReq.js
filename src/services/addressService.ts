@@ -30,7 +30,7 @@ class AddressService {
 
   async findByNeighborhoodWithSeller(neighborhood: string) {
     const addressesWithSellers = await this.addressRepository.findByNeighborhoodWithSeller(neighborhood);
-    
+
     const sellers = addressesWithSellers.map(address => {
       return {
         address: {
@@ -49,6 +49,9 @@ class AddressService {
           name: address.Seller[0].user.name,
           email: address.Seller[0].user.email,
           phone: address.Seller[0].phone,
+          favorities: address.Seller[0].Favorite.map(favorite =>
+            favorite.customer.userId,
+          )
         }
       }
     })

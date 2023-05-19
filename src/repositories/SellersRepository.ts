@@ -48,12 +48,17 @@ class SellersRepository implements ISellersRepository {
           include: {
             customer: {
               include: {
-                user: true,
-              }
+                user: true
+              },
             }
           }
         },
         address: true,
+        Favorite: {
+          include: {
+            customer: true
+          }
+        }
       }
     });
 

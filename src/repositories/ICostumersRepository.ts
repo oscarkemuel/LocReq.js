@@ -1,4 +1,4 @@
-import { Customer, CustomerPlace } from "@prisma/client";
+import { Customer } from "@prisma/client";
 
 interface ICustomersRepository {
   create(data: ICreateCustomerDTO): Promise<Customer>;

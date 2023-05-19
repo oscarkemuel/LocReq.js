@@ -1,4 +1,4 @@
-import { Address, Seller, User } from "@prisma/client";
+import { Address, Customer, Favorite, Seller, User } from "@prisma/client";
 import { prismaClient } from "../database";
 import { IAddressRepository } from "./IAddressRepository";
 
@@ -37,6 +37,9 @@ class AddressRepository implements IAddressRepository {
 
   async findByNeighborhoodWithSeller(neighborhood: string): Promise<(Address & {
     Seller: (Seller & {
+        Favorite: (Favorite & {
+            customer: Customer;
+        })[];
         user: User;
     })[];
 })[]> {
@@ -52,7 +55,12 @@ class AddressRepository implements IAddressRepository {
       include: {
         Seller: {
           include: {
-            user: true
+            user: true,
+            Favorite: {
+              include: {
+                customer: true
+              }
+            }
           }
         },
       }

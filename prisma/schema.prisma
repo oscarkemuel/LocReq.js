@@ -44,6 +44,7 @@ model Seller {
   DeliveryRequest DeliveryRequest[]
   Product         Product[]
   FeedbackSeller  FeedbackSeller[]
+  Favorite        Favorite[]
 }
 
 model Product {
@@ -66,6 +67,7 @@ model Customer {
   DeliveryRequest DeliveryRequest[]
   CustomerPlace   CustomerPlace[]
   FeedbackSeller  FeedbackSeller[]
+  Favorite        Favorite[]
 }
 
 model CustomerPlace {
@@ -98,6 +100,14 @@ model FeedbackSeller {
   id         String   @id @default(uuid())
   comment    String?
   rating     Float
+  customerId String   @map("customer_id")
+  customer   Customer @relation(fields: [customerId], references: [id])
+  sellerId   String   @map("seller_id")
+  seller     Seller   @relation(fields: [sellerId], references: [id])
+}
+
+model Favorite {
+  id         String   @id @default(uuid())
   customerId String   @map("customer_id")
   customer   Customer @relation(fields: [customerId], references: [id])
   sellerId   String   @map("seller_id")
