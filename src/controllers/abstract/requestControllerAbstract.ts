@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { DeliveryRequestService } from '../../services/deliveryRequestService';
 import { validateSchema } from '../../validations';
 import { createDeliveryRequestSchema } from '../../validations/DeliveryRequest/createDeliveryRequest';
 import { showByStatusBySellerIdSchema } from '../../validations/DeliveryRequest/showByStatusBySellerId';
+import { RequestService } from '../../../implementation/services/requestService';
 
 abstract class RequestControllerAbstract {
-  public deliveryRequestService = new DeliveryRequestService();
+  public requestService = new RequestService();
 
   abstract updateStatus(req: Request, res: Response): Promise<Response>;
   abstract cancel(req: Request, res: Response): Promise<Response>;
@@ -13,7 +13,7 @@ abstract class RequestControllerAbstract {
   async create(req: Request, res: Response) {
     const { body: payload }= await validateSchema(createDeliveryRequestSchema, req);
 
-    const deliveryRequest = await this.deliveryRequestService.create({
+    const deliveryRequest = await this.requestService.create({
       customerId: req.user.id,
       ... payload
     });
@@ -22,7 +22,7 @@ abstract class RequestControllerAbstract {
   }
 
   async showByCustomer(req: Request, res: Response) {
-    const deliveryRequests = await this.deliveryRequestService.showByCustomer(req.user.id);
+    const deliveryRequests = await this.requestService.showByCustomer(req.user.id);
 
     return res.status(200).json({ deliveryRequests });
   }
@@ -30,7 +30,7 @@ abstract class RequestControllerAbstract {
   async showBySeller(req: Request, res: Response) {
     const { id: userId } = req.user;
 
-    const deliveryRequests = await this.deliveryRequestService.showBySellerId(userId);
+    const deliveryRequests = await this.requestService.showBySellerId(userId);
 
     return res.status(200).json({ deliveryRequests });
   }
@@ -39,7 +39,7 @@ abstract class RequestControllerAbstract {
     const { id: userId } = req.user;
     const { params: {status} } = await validateSchema(showByStatusBySellerIdSchema, req);
 
-    const deliveryRequests = await this.deliveryRequestService.showByStatusBySellerId(userId, status);
+    const deliveryRequests = await this.requestService.showByStatusBySellerId(userId, status);
 
     return res.status(200).json({ deliveryRequests });
   }
@@ -47,7 +47,7 @@ abstract class RequestControllerAbstract {
   async showByPlaceId(req: Request, res: Response) {
     const { placeId } = req.params;
 
-    const deliveryRequests = await this.deliveryRequestService.showByPlaceId(placeId);
+    const deliveryRequests = await this.requestService.showByPlaceId(placeId);
 
     return res.status(200).json({ deliveryRequests });
   }

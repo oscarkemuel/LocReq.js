@@ -8,8 +8,8 @@ class UpdateRequestStatus implements IUpdateRequestStatus {
         status: z.enum(['pending', 'accepted', 'rejected', 'delivered']),
       }),
       params: z.object({
-        deliveryRequestId: z.string({
-          required_error: "DeliveryRequestId is required",
+        requestId: z.string({
+          required_error: "requestId is required",
         }).uuid("Not a valid uuid"),
       }),
     });
