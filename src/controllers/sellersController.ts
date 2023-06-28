@@ -4,7 +4,6 @@ import { validateSchema } from '../validations';
 import { createSellerSchema } from '../validations/Seller/createSeller';
 import { createProductSchema } from '../validations/Product/createProduct';
 import { updateProductSchema } from '../validations/Product/updateProduct';
-import { updateDeliveryRequestStatusSchema } from '../validations/DeliveryRequest/updateDeliveryRequestStatus';
 class SellersController {
   private sellersService = new SellersService();
 

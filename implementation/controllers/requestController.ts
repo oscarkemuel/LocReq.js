@@ -1,12 +1,16 @@
 import { Request, Response } from 'express';
 import { RequestControllerAbstract } from '../../src/controllers/abstract/requestControllerAbstract';
 import { validateSchema } from '../../src/validations';
-import { updateDeliveryRequestStatusSchema } from '../../src/validations/DeliveryRequest/updateDeliveryRequestStatus';
+import { UpdateRequestStatus } from '../validations/DeliveryRequest/updateRequestStatus';
 
 class RequestController extends RequestControllerAbstract {
+  private updateRequestStatusSchema = new UpdateRequestStatus;
+
   async updateStatus(req: Request, res: Response) {
-    const { body: { status }, params: { deliveryRequestId } } = 
-      await validateSchema(updateDeliveryRequestStatusSchema, req);
+    const schema = this.updateRequestStatusSchema.getSchema();
+
+    const { body: { status }, params: { deliveryRequestId } } =
+      await validateSchema(schema, req);
     const { id: userId } = req.user;
 
     const deliveryRequest = await this.deliveryRequestService.updateStatus(userId, deliveryRequestId, status);
@@ -15,7 +19,7 @@ class RequestController extends RequestControllerAbstract {
   }
 
 
-    async cancel(req: Request, res: Response) {
+  async cancel(req: Request, res: Response) {
     const { id: userId } = req.user;
     const { deliveryRequestId } = req.params;
 
