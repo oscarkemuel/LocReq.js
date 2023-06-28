@@ -1,32 +1,32 @@
 import { Router } from 'express'
-import { DeliveryRequestController } from '../controllers/deliveryRequestController';
+import { RequestController } from '../../implementation/controllers/requestController';
 
-const deliveryRequestRouter = Router()
-const deliveryRequestController = new DeliveryRequestController();
+const requestRouter = Router()
+const requestController = new RequestController();
 
 // Customer
-deliveryRequestRouter.post('/', (request, response) => {
-  return deliveryRequestController.create(request, response)
+requestRouter.post('/', (request, response) => {
+  return requestController.create(request, response)
 })
-deliveryRequestRouter.get('/my-requests', (request, response) => {
-  return deliveryRequestController.showByCustomer(request, response)
+requestRouter.get('/my-requests', (request, response) => {
+  return requestController.showByCustomer(request, response)
 })
-deliveryRequestRouter.get('/place/:placeId', (request, response) => {
-  return deliveryRequestController.showByPlaceId(request, response)
+requestRouter.get('/place/:placeId', (request, response) => {
+  return requestController.showByPlaceId(request, response)
 })
-deliveryRequestRouter.put('/cancel/:deliveryRequestId', (request, response) => {
-  return deliveryRequestController.cancel(request, response)
+requestRouter.put('/cancel/:requestId', (request, response) => {
+  return requestController.cancel(request, response)
 })
 
 // Seller
-deliveryRequestRouter.patch('/:deliveryRequestId/status', (request, response) => {
-  return deliveryRequestController.updateStatus(request, response)
+requestRouter.patch('/:requestId/status', (request, response) => {
+  return requestController.updateStatus(request, response)
 })
-deliveryRequestRouter.get('/by-seller', (request, response) => {
-  return deliveryRequestController.showBySeller(request, response)
+requestRouter.get('/by-seller', (request, response) => {
+  return requestController.showBySeller(request, response)
 })
-deliveryRequestRouter.get('/by-seller/:status', (request, response) => {
-  return deliveryRequestController.showByStatusBySellerId(request, response)
+requestRouter.get('/by-seller/:status', (request, response) => {
+  return requestController.showByStatusBySellerId(request, response)
 })
 
-export { deliveryRequestRouter }
+export { requestRouter }
