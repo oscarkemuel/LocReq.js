@@ -1,13 +1,19 @@
-import { ICreateProductDTO } from "../dtos/ICreateProductDTO";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../helpers/apiErros";
 import { SellersRepository } from "../repositories/SellersRepository";
 import { AddressService } from "./addressService";
 import { ProductService } from "../../implementation/services/productService";
+import { Request } from "express";
+import { validateSchema } from "../validations";
+import { CreateProduct } from "../../implementation/validations/Product/createProduct";
+import { UpdateProduct } from "../../implementation/validations/Product/updateProduct";
 
 class SellersService {
   private sellersRepository = new SellersRepository();
   private addressService = new AddressService();
   private productService = new ProductService();
+
+  private createProductSchema = new CreateProduct();
+  private updateProductSchema = new UpdateProduct();
 
   async create(data: ICreateSellerDTO) {
     const sellerWithPhoneAlreadyExists = await this.sellersRepository.findByPhone(data.phone);
@@ -58,18 +64,21 @@ class SellersService {
     return seller;
   }
 
-  async createProduct(data: ICreateProductDTO) {
-    const seller = await this.getByUserId(data.sellerId);
+  async createProduct({ sellerId, req}: { sellerId: string, req: Request }) {
+    const schema = this.createProductSchema.getSchema();
+    const { body: payload } = await validateSchema(schema, req);
+
+    const seller = await this.getByUserId(sellerId);
 
     if (!seller) {
       throw new NotFoundError('Seller not found');
     }
 
     const product = await this.productService.create({
-      name: data.name,
-      description: data.description,
-      price: data.price,
-      quantity: data.quantity,
+      name: payload.name,
+      description: payload.description,
+      price: payload.price,
+      quantity: payload.quantity,
       sellerId: seller.id
     });
 
@@ -104,7 +113,10 @@ class SellersService {
     return products;
   }
 
-  async updateProduct(userId: string, productId: string, data: ICreateProductDTO) {
+  async updateProduct(userId: string, req: Request) {
+    const schema = this.updateProductSchema.getSchema();
+    const { body: payload, params: { productId } } = await validateSchema(schema, req);
+    
     const seller = await this.getByUserId(userId);
 
     if (!seller) {
@@ -118,10 +130,10 @@ class SellersService {
     }
 
     const newProduct = await this.productService.update(productId, {
-      name: data.name,
-      description: data.description,
-      price: data.price,
-      quantity: data.quantity,
+      name: payload.name,
+      description: payload.description,
+      price: payload.price,
+      quantity: payload.quantity,
       sellerId: seller.id
     });
 

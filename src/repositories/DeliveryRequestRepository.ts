@@ -1,7 +1,7 @@
 import { DeliveryRequest } from "@prisma/client";
 import { prismaClient } from "../database";
-import { ICreateDeliveryRequestDTO } from "../dtos/ICreateDeliveryRequestDTO";
 import { IDeliveryRequestRepository } from "./IDeliveryRequestRepository";
+import { ICreateDeliveryRequestDTO } from "../../implementation/dtos/ICreateDeliveryRequestDTO";
 
 class DeliveryRequestRepository implements IDeliveryRequestRepository {
   private repository;
@@ -12,7 +12,7 @@ class DeliveryRequestRepository implements IDeliveryRequestRepository {
 
   async create(data: ICreateDeliveryRequestDTO): Promise<DeliveryRequest> {
     const deliveryRequest = await this.repository.create({
-      data
+      data,
     });
 
     return deliveryRequest;

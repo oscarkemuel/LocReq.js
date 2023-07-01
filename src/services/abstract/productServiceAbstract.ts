@@ -1,7 +1,6 @@
-import { promises } from "dns";
-import { ICreateProductDTO } from "../../dtos/ICreateProductDTO";
 import { BadRequestError, NotFoundError } from "../../helpers/apiErros";
 import { ProductRepository } from "../../repositories/ProductRepository";
+import { ICreateProductDTO } from "../../../implementation/dtos/ICreateProductDTO";
 
 abstract class ProductServiceAbstract {
   public productRepository = new ProductRepository();

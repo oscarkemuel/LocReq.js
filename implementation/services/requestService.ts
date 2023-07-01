@@ -7,9 +7,9 @@ import {
 import { RequestServiceAbstract } from "../../src/services/abstract/requestServiceAbstract";
 import { UpdateRequestStatus } from "../../implementation/validations/DeliveryRequest/updateRequestStatus";
 import { validateSchema } from "../../src/validations";
-import { ICreateDeliveryRequestDTO } from "../../src/dtos/ICreateDeliveryRequestDTO";
 import { ProductService } from "./productService";
 import { PlaceService } from "../../src/services/placeService";
+import { ICreateDeliveryRequestDTO } from "../dtos/ICreateDeliveryRequestDTO";
 
 class RequestService extends RequestServiceAbstract {
   private updateRequestStatusSchema = new UpdateRequestStatus();
