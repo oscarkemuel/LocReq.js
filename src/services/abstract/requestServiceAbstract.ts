@@ -9,46 +9,19 @@ import { SellersService } from "../sellersService";
 
 abstract class RequestServiceAbstract {
   public deliveryRequestRepository = new DeliveryRequestRepository();
-  private placeService = new PlaceService();
-  private productService = new ProductService();
+  // private placeService = new PlaceService();
+  // private productService = new ProductService();
   public customerService = new CustomersService();
   public sellerService = new SellersService();
 
   abstract updateStatus(userId: string, req: Request): Promise<any>;
   abstract cancel(userId: string, id: string): Promise<any>;
-
-  async create(
+  abstract create(
     data: Omit<
       ICreateDeliveryRequestDTO,
       "delivery_time" | "status" | "sellerId"
     >
-  ) {
-    const customer = await this.customerService.getByUserId(data.customerId);
-    const place = await this.placeService.show(data.placeId);
-    const product = await this.productService.showById(data.productId);
-
-    if (place.customerId !== customer.id) {
-      throw new BadRequestError("Place does not belong to customer");
-    }
-
-    await this.productService.decrementQuantity(product.id, data.quantity);
-
-    const payload = {
-      status: "pending",
-      quantity: data.quantity,
-      delivery_time: new Date(),
-      sellerId: product.sellerId,
-      productId: product.id,
-      placeId: place.id,
-      customerId: customer.id,
-    };
-
-    const deliveryRequest = await this.deliveryRequestRepository.create(
-      payload
-    );
-
-    return deliveryRequest;
-  }
+  ): Promise<any>;
 
   async showById(id: string) {
     const deliveryRequest = await this.deliveryRequestRepository.showById(id);

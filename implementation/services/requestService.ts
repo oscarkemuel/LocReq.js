@@ -7,9 +7,47 @@ import {
 import { RequestServiceAbstract } from "../../src/services/abstract/requestServiceAbstract";
 import { UpdateRequestStatus } from "../../implementation/validations/DeliveryRequest/updateRequestStatus";
 import { validateSchema } from "../../src/validations";
+import { ICreateDeliveryRequestDTO } from "../../src/dtos/ICreateDeliveryRequestDTO";
+import { ProductService } from "../../src/services/productService";
+import { PlaceService } from "../../src/services/placeService";
 
 class RequestService extends RequestServiceAbstract {
   private updateRequestStatusSchema = new UpdateRequestStatus();
+  private productService = new ProductService();
+  private placeService = new PlaceService();
+  async create(
+    data: Omit<
+      ICreateDeliveryRequestDTO,
+      "delivery_time" | "status" | "sellerId"
+    >
+  ) {
+    const customer = await this.customerService.getByUserId(data.customerId);
+    const place = await this.placeService.show(data.placeId);
+    const product = await this.productService.showById(data.productId);
+
+    if (place.customerId !== customer.id) {
+      throw new BadRequestError("Place does not belong to customer");
+    }
+
+    await this.productService.decrementQuantity(product.id, data.quantity);
+
+    const payload = {
+      status: "pending",
+      quantity: data.quantity,
+      delivery_time: new Date(),
+      sellerId: product.sellerId,
+      productId: product.id,
+      placeId: place.id,
+      customerId: customer.id,
+    };
+
+    const deliveryRequest = await this.deliveryRequestRepository.create(
+      payload
+    );
+
+    return deliveryRequest;
+  }
+
   async updateStatus(userId: string, req: Request) {
     const seller = await this.sellerService.getByUserId(userId);
     const schema = this.updateRequestStatusSchema.getSchema();
