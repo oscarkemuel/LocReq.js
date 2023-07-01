@@ -4,7 +4,6 @@ import { BadRequestError, NotFoundError } from "../../helpers/apiErros";
 import { DeliveryRequestRepository } from "../../repositories/DeliveryRequestRepository";
 import { CustomersService } from "../customersService";
 import { PlaceService } from "../placeService";
-import { ProductService } from "../productService";
 import { SellersService } from "../sellersService";
 
 abstract class RequestServiceAbstract {

@@ -2,7 +2,7 @@ import { ICreateProductDTO } from "../dtos/ICreateProductDTO";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../helpers/apiErros";
 import { SellersRepository } from "../repositories/SellersRepository";
 import { AddressService } from "./addressService";
-import { ProductService } from "./productService";
+import { ProductService } from "../../implementation/services/productService";
 
 class SellersService {
   private sellersRepository = new SellersRepository();
