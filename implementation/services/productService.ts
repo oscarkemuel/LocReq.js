@@ -1,8 +1,10 @@
 import { BadRequestError, NotFoundError } from "../../src/helpers/apiErros";
 import { ProductServiceAbstract } from "../../src/services/abstract/productServiceAbstract";
 import { ICreateProductDTO } from "../dtos/ICreateProductDTO";
+import { ConcreteManage } from "./concreteManage";
 
 class ProductService extends ProductServiceAbstract {
+  productManage = new ConcreteManage();
   async create(data: ICreateProductDTO) {
     if (!this.validateNewProduct(data)) {
       throw new BadRequestError("Product not create. Validation error");
