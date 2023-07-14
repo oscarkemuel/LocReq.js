@@ -1,3 +1,4 @@
+import { SearchService } from "../../implementation/services/searchService";
 import { NotFoundError } from "../helpers/apiErros";
 import { PlaceRepository } from "../repositories/PlaceRepository";
 import { AddressService } from "./addressService";
@@ -7,6 +8,7 @@ class PlaceService {
   private placeRepository = new PlaceRepository();
   private addressService = new AddressService();
   private customerService = new CustomersService();
+  private searchService = new SearchService();
     
   async create(data: ICreatePlaceDTO) {
     const costumer = await this.customerService.getByUserId(data.userId);
@@ -70,12 +72,22 @@ class PlaceService {
     return updatedPlace;
   }
 
-  async findNearbySellers(placeId: string) {
+  // async findNearbySellers(placeId: string) {
+  //   const place = await this.show(placeId);
+  //   const address = await this.addressService.show(place.addressId);
+
+  //   const places = 
+  //     await this.addressService.findByNeighborhoodWithSeller(address.neighborhood);
+
+  //   return places;
+  // }
+
+  async findNearbySellers(placeId: string, sellerName: string) {
     const place = await this.show(placeId);
     const address = await this.addressService.show(place.addressId);
 
     const places = 
-      await this.addressService.findByNeighborhoodWithSeller(address.neighborhood);
+      await this.searchService.Search(sellerName, address.neighborhood);
 
     return places;
   }

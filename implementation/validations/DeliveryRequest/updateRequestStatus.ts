@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { IUpdateRequestStatus } from "../../../src/validations/DeliveryRequest/IUpdateRequestStatus";
+import { IValidator } from "../../../src/validations/IValidator";
 
-class UpdateRequestStatus implements IUpdateRequestStatus {
+class UpdateRequestStatus implements IValidator {
   getSchema() {
     const updateRequestStatusSchema = z.object({
       body: z.object({

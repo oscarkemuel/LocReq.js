@@ -1,7 +1,7 @@
 import { Prisma, Product } from "@prisma/client";
-import { ICreateProductDTO } from "../dtos/ICreateProductDTO";
 import { IProductRepository } from "./IProductRepository";
 import { prismaClient } from "../database";
+import { ICreateProductDTO } from "../../implementation/dtos/ICreateProductDTO";
 
 class ProductRepository implements IProductRepository {
   private repository;

@@ -52,10 +52,11 @@ model Product {
   name            String
   description     String?
   price           Float
-  quantity        Int
   sellerId        String            @map("seller_id")
   seller          Seller            @relation(fields: [sellerId], references: [id])
   DeliveryRequest DeliveryRequest[]
+
+  quantity Int?
 }
 
 model Customer {
@@ -83,7 +84,6 @@ model CustomerPlace {
 
 model DeliveryRequest {
   id            String        @id @default(uuid())
-  quantity      Int
   delivery_time DateTime
   status        String
   placeId       String        @map("place_id")
@@ -94,6 +94,9 @@ model DeliveryRequest {
   seller        Seller        @relation(fields: [sellerId], references: [id])
   Product       Product       @relation(fields: [productId], references: [id])
   productId     String
+
+  quantity Int?
+  days     Int?
 }
 
 model FeedbackSeller {

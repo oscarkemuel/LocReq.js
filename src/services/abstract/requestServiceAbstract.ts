@@ -1,11 +1,9 @@
 import { Request } from "express";
-import { ICreateDeliveryRequestDTO } from "../../dtos/ICreateDeliveryRequestDTO";
-import { BadRequestError, NotFoundError } from "../../helpers/apiErros";
+import { NotFoundError } from "../../helpers/apiErros";
 import { DeliveryRequestRepository } from "../../repositories/DeliveryRequestRepository";
 import { CustomersService } from "../customersService";
-import { PlaceService } from "../placeService";
-import { ProductService } from "../productService";
 import { SellersService } from "../sellersService";
+import { ICreateDeliveryRequestDTO } from "../../../implementation/dtos/ICreateDeliveryRequestDTO";
 
 abstract class RequestServiceAbstract {
   public deliveryRequestRepository = new DeliveryRequestRepository();

@@ -7,9 +7,9 @@ import {
 import { RequestServiceAbstract } from "../../src/services/abstract/requestServiceAbstract";
 import { UpdateRequestStatus } from "../../implementation/validations/DeliveryRequest/updateRequestStatus";
 import { validateSchema } from "../../src/validations";
-import { ICreateDeliveryRequestDTO } from "../../src/dtos/ICreateDeliveryRequestDTO";
-import { ProductService } from "../../src/services/productService";
+import { ProductService } from "./productService";
 import { PlaceService } from "../../src/services/placeService";
+import { ICreateDeliveryRequestDTO } from "../dtos/ICreateDeliveryRequestDTO";
 
 class RequestService extends RequestServiceAbstract {
   private updateRequestStatusSchema = new UpdateRequestStatus();
@@ -98,6 +98,12 @@ class RequestService extends RequestServiceAbstract {
     if (status === "delivered" && deliveryRequest.status !== "accepted") {
       throw new BadRequestError(
         "You are not allowed to deliver this delivery request"
+      );
+    }
+
+    if (status === "pending") {
+      throw new BadRequestError(
+        "You are not allowed to return to pending"
       );
     }
 

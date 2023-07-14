@@ -3,6 +3,9 @@ import { PlaceService } from '../services/placeService';
 import { validateSchema } from '../validations';
 import { createPlaceSchema } from '../validations/Place/createPlace';
 import { updatePlaceSchema } from '../validations/Place/updatePlace';
+import { Seller } from '@prisma/client';
+import { isNull } from 'lodash';
+import { late } from 'zod';
 
 class PlaceController {
   private placeService = new PlaceService();
@@ -51,8 +54,12 @@ class PlaceController {
 
   async findNearbySellers(req: Request, res: Response) {
     const { placeId } = req.params;
+    const sellerName = req.body.sellerName;
+    console.log(sellerName)
+    let sellerNameAux;
+    sellerName === undefined ? sellerNameAux = "": sellerNameAux = sellerName;
 
-    const sellers = await this.placeService.findNearbySellers(placeId);
+    const sellers = await this.placeService.findNearbySellers(placeId, sellerNameAux);
 
     return res.status(200).json({ sellers });
   }

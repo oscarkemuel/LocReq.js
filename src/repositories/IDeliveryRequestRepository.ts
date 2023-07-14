@@ -1,5 +1,5 @@
 import { DeliveryRequest } from "@prisma/client";
-import { ICreateDeliveryRequestDTO } from "../dtos/ICreateDeliveryRequestDTO";
+import { ICreateDeliveryRequestDTO } from "../../implementation/dtos/ICreateDeliveryRequestDTO";
 
 interface IDeliveryRequestRepository {
   create(data: ICreateDeliveryRequestDTO): Promise<DeliveryRequest>;

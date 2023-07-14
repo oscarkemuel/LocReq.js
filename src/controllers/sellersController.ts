@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import { SellersService } from '../services/sellersService';
 import { validateSchema } from '../validations';
 import { createSellerSchema } from '../validations/Seller/createSeller';
-import { createProductSchema } from '../validations/Product/createProduct';
-import { updateProductSchema } from '../validations/Product/updateProduct';
 class SellersController {
   private sellersService = new SellersService();
 
@@ -33,12 +31,11 @@ class SellersController {
   }
 
   async createProduct(req: Request, res: Response) {
-    const { body: payload } = await validateSchema(createProductSchema, req);
     const user = req.user;
 
     const newProduct = await this.sellersService.createProduct({ 
-      sellerId: user.id, 
-      ...payload 
+      sellerId: user.id,
+      req
     });
 
     return res.status(201).json({ product: newProduct });
@@ -62,13 +59,9 @@ class SellersController {
   }
 
   async updateProduct(req: Request, res: Response) {
-    const { body: payload, params: { productId } } = await validateSchema(updateProductSchema, req);
     const user = req.user;
     
-    const newProduct = await this.sellersService.updateProduct(user.id, productId, {
-      ...payload,
-      sellerId: user.id
-    });
+    const newProduct = await this.sellersService.updateProduct(user.id, req);
 
     return res.status(200).json({ product: newProduct });
   }

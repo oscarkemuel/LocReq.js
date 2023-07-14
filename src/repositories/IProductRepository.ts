@@ -1,5 +1,5 @@
 import { Product } from "@prisma/client";
-import { ICreateProductDTO } from "../dtos/ICreateProductDTO";
+import { ICreateProductDTO } from "../../implementation/dtos/ICreateProductDTO";
 
 interface IProductRepository {
   create(data: ICreateProductDTO): Promise<Product>;

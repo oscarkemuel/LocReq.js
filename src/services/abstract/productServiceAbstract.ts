@@ -1,15 +1,13 @@
-import { ICreateProductDTO } from "../dtos/ICreateProductDTO";
-import { BadRequestError, NotFoundError } from "../helpers/apiErros";
-import { ProductRepository } from "../repositories/ProductRepository";
+import { BadRequestError, NotFoundError } from "../../helpers/apiErros";
+import { ProductRepository } from "../../repositories/ProductRepository";
+import { ICreateProductDTO } from "../../../implementation/dtos/ICreateProductDTO";
 
-class ProductService {
-  private productRepository = new ProductRepository();
+abstract class ProductServiceAbstract {
+  public productRepository = new ProductRepository();
 
-  async create(data: ICreateProductDTO) {
-    const product = await this.productRepository.create(data);
-
-    return product;
-  }
+  abstract create(data: ICreateProductDTO):Promise<any>
+  abstract validateNewProduct (Product:any):boolean
+  abstract update(id: string, data: ICreateProductDTO):Promise<any>
 
   async show() {
     const products = await this.productRepository.show();
@@ -25,26 +23,6 @@ class ProductService {
     }
 
     return product;
-  }
-
-  async update(id: string, data: ICreateProductDTO) {
-    const product = await this.productRepository.showById(id);
-    
-    if (!product) {
-      throw new NotFoundError('Product not found');
-    }
-
-    const productWithout_count = {
-      name: data.name,
-      description: data.description,
-      price: data.price,
-      quantity: data.quantity,
-      sellerId: data.sellerId
-    }
-
-    const newProduct = await this.productRepository.update(id, productWithout_count);
-
-    return newProduct;
   }
 
   async delete(id: string) {
@@ -94,4 +72,4 @@ class ProductService {
   }
 }
 
-export { ProductService }
+export { ProductServiceAbstract }

@@ -1,5 +1,5 @@
 import { AnyZodObject } from "zod";
 
-export interface IUpdateRequestStatus {
+export interface IValidator {
   getSchema(): AnyZodObject;
 }
