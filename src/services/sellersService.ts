@@ -75,10 +75,7 @@ class SellersService {
     }
 
     const product = await this.productService.create({
-      name: payload.name,
-      description: payload.description,
-      price: payload.price,
-      quantity: payload.quantity,
+      ...payload,
       sellerId: seller.id
     });
 
@@ -130,10 +127,7 @@ class SellersService {
     }
 
     const newProduct = await this.productService.update(productId, {
-      name: payload.name,
-      description: payload.description,
-      price: payload.price,
-      quantity: payload.quantity,
+      ...payload,
       sellerId: seller.id
     });
 

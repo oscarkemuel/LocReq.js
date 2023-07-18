@@ -53,13 +53,9 @@ class PlaceController {
   }
 
   async findNearbySellers(req: Request, res: Response) {
-    const { placeId } = req.params;
-    const sellerName = req.body.sellerName;
-    console.log(sellerName)
-    let sellerNameAux;
-    sellerName === undefined ? sellerNameAux = "": sellerNameAux = sellerName;
+    const { placeId, search } = req.params;
 
-    const sellers = await this.placeService.findNearbySellers(placeId, sellerNameAux);
+    const sellers = await this.placeService.findNearbySellers(placeId, search);
 
     return res.status(200).json({ sellers });
   }

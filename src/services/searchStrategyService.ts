@@ -1,5 +1,10 @@
-interface SearchStrategyService {
-    Search(sellerName?: string, neighborhood?: string, productName?: string):Promise<any>
+interface ParamsSerarch {
+    neighborhood: string;
+    search: string;
 }
 
-export { SearchStrategyService }
+interface SearchStrategyService {
+    Search(params: ParamsSerarch):Promise<any>
+}
+
+export { SearchStrategyService, ParamsSerarch }

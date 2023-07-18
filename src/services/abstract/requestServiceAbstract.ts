@@ -14,12 +14,7 @@ abstract class RequestServiceAbstract {
 
   abstract updateStatus(userId: string, req: Request): Promise<any>;
   abstract cancel(userId: string, id: string): Promise<any>;
-  abstract create(
-    data: Omit<
-      ICreateDeliveryRequestDTO,
-      "delivery_time" | "status" | "sellerId"
-    >
-  ): Promise<any>;
+  abstract create(userId: string, req: Request): Promise<any>;
 
   async showById(id: string) {
     const deliveryRequest = await this.deliveryRequestRepository.showById(id);

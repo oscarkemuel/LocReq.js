@@ -60,7 +60,7 @@ class AddressRepository implements IAddressRepository {
               include: {
                 customer: true
               }
-            }
+            },
           }
         },
       }

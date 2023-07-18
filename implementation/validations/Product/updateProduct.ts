@@ -14,9 +14,9 @@ class UpdateProduct implements IValidator {
         price: z.number({
           required_error: "Price is required",
         }),
-        quantity: z.number({
-          required_error: "Quantity is required",
-        }).int("Quantity must be an integer")
+        model: z.string({
+          required_error: "Model is required",
+        })
       }),
       params: z.object({
         productId: z.string({

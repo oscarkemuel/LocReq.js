@@ -5,7 +5,7 @@ class UpdateRequestStatus implements IValidator {
   getSchema() {
     const updateRequestStatusSchema = z.object({
       body: z.object({
-        status: z.enum(['pending', 'accepted', 'rejected', 'delivered']),
+        status: z.enum(['requested', 'confirmed', 'rented', 'returned', 'not-returned', 'rejected']),
       }),
       params: z.object({
         requestId: z.string({
