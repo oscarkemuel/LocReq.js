@@ -5,9 +5,19 @@ import { ICreateProductDTO } from "../../../implementation/dtos/ICreateProductDT
 abstract class ProductServiceAbstract {
   public productRepository = new ProductRepository();
 
-  abstract create(data: ICreateProductDTO):Promise<any>
-  abstract validateNewProduct (Product:any):boolean
-  abstract update(id: string, data: ICreateProductDTO):Promise<any>
+  abstract create(data: ICreateProductDTO): Promise<any>;
+  abstract validateNewProduct(product: any): boolean;
+  abstract update(id: string, data: ICreateProductDTO): Promise<any>;
+
+  // async validateNewProduct(product: any) {
+  //   if (generalValidation) {
+  //     if (this.valideteSpecific(product)) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
+  // abstract validateSpecific(product: any): boolean;
 
   async show() {
     const products = await this.productRepository.show();
@@ -19,7 +29,7 @@ abstract class ProductServiceAbstract {
     const product = await this.productRepository.showById(id);
 
     if (!product) {
-      throw new NotFoundError('Product not found');
+      throw new NotFoundError("Product not found");
     }
 
     return product;
@@ -29,13 +39,13 @@ abstract class ProductServiceAbstract {
     const product = await this.productRepository.showById(id);
 
     if (!product) {
-      throw new NotFoundError('Product not found');
+      throw new NotFoundError("Product not found");
     }
 
     if (product._count.DeliveryRequest > 0) {
-      throw new BadRequestError('Product has delivery requests');
+      throw new BadRequestError("Product has delivery requests");
     }
-    
+
     await this.productRepository.delete(id);
   }
 
@@ -45,31 +55,36 @@ abstract class ProductServiceAbstract {
     return products;
   }
 
-  async decrementQuantity(id: string, quantity: number) {
-    const product = await this.productRepository.showById(id);
+  async manageProduct(id: string, productAction: (id: string) => any) {}
 
-    if (!product) {
-      throw new NotFoundError('Product not found');
-    }
+  // async decrementQuantity(id: string, quantity: number) {
+  //   const product = await this.productRepository.showById(id);
 
-    if(product.quantity < quantity) {
-      throw new NotFoundError('Insufficient quantity');
-    }
+  //   if (!product) {
+  //     throw new NotFoundError("Product not found");
+  //   }
 
-    const newQuantity = product.quantity - quantity;
+  //   if (product.quantity < quantity) {
+  //     throw new NotFoundError("Insufficient quantity");
+  //   }
 
-    const productWithout_count = {
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      quantity: product.quantity,
-      sellerId: product.sellerId
-    }
+  //   const newQuantity = product.quantity - quantity;
 
-    const newProduct = await this.productRepository.update(id, { ...productWithout_count, quantity: newQuantity });
+  //   const productWithout_count = {
+  //     name: product.name,
+  //     description: product.description,
+  //     price: product.price,
+  //     quantity: product.quantity,
+  //     sellerId: product.sellerId,
+  //   };
 
-    return newProduct;
-  }
+  //   const newProduct = await this.productRepository.update(id, {
+  //     ...productWithout_count,
+  //     quantity: newQuantity,
+  //   });
+
+  //   return newProduct;
+  // }
 }
 
-export { ProductServiceAbstract }
+export { ProductServiceAbstract };

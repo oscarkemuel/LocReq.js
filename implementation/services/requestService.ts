@@ -29,7 +29,10 @@ class RequestService extends RequestServiceAbstract {
       throw new BadRequestError("Place does not belong to customer");
     }
 
-    await this.productService.decrementQuantity(product.id, data.quantity);
+    await this.productService.productManage.templateMethod(
+      product.id,
+      data.quantity
+    );
 
     const payload = {
       status: "pending",
@@ -102,9 +105,7 @@ class RequestService extends RequestServiceAbstract {
     }
 
     if (status === "pending") {
-      throw new BadRequestError(
-        "You are not allowed to return to pending"
-      );
+      throw new BadRequestError("You are not allowed to return to pending");
     }
 
     const newDeliveryRequest =
