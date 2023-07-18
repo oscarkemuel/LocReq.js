@@ -6,7 +6,7 @@ import { ConcreteManage } from "./concreteManage";
 class ProductService extends ProductServiceAbstract {
   productManage = new ConcreteManage();
   async create(data: ICreateProductDTO) {
-    if (!this.validateNewProduct(data)) {
+    if (!await this.validateNewProduct(data)) {
       throw new BadRequestError("Product not create. Validation error");
     }
 
@@ -15,19 +15,18 @@ class ProductService extends ProductServiceAbstract {
     return product;
   }
 
-  validateNewProduct(Product: ICreateProductDTO) {
-    if (Product.quantity <= 0) {
+  async validateNewProduct(product: ICreateProductDTO) {
+    const hasProduct = await this.productRepository.showByName(product.name)
+
+    if (hasProduct) {
       return false;
     }
+
     return true;
   }
 
   async update(id: string, data: ICreateProductDTO) {
     const product = await this.productRepository.showById(id);
-
-    if (!this.validateNewProduct(data)) {
-      throw new BadRequestError("Product not create. Validation error");
-    }
 
     if (!product) {
       throw new NotFoundError("Product not found");

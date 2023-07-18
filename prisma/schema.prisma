@@ -56,7 +56,10 @@ model Product {
   seller          Seller            @relation(fields: [sellerId], references: [id])
   DeliveryRequest DeliveryRequest[]
 
-  quantity Int?
+  quantity  Int?
+  model     String?
+  startTime DateTime?
+  endTime   DateTime?
 }
 
 model Customer {

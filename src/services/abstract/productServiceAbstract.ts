@@ -6,7 +6,7 @@ abstract class ProductServiceAbstract {
   public productRepository = new ProductRepository();
 
   abstract create(data: ICreateProductDTO): Promise<any>;
-  abstract validateNewProduct(product: any): boolean;
+  abstract validateNewProduct(product: any): Promise<boolean>;
   abstract update(id: string, data: ICreateProductDTO): Promise<any>;
 
   // async validateNewProduct(product: any) {
@@ -27,6 +27,16 @@ abstract class ProductServiceAbstract {
 
   async showById(id: string) {
     const product = await this.productRepository.showById(id);
+
+    if (!product) {
+      throw new NotFoundError("Product not found");
+    }
+
+    return product;
+  }
+
+  async showByName(name: string) {
+    const product = await this.productRepository.showByName(name);
 
     if (!product) {
       throw new NotFoundError("Product not found");

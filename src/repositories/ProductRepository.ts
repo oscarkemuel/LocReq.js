@@ -39,6 +39,16 @@ class ProductRepository implements IProductRepository {
     return product;
   }
 
+  async showByName(name: string): Promise<Product | null> {
+    const product = await this.repository.findFirst({
+      where: {
+        name
+      }
+    });
+
+    return product;
+  }
+
   async update(id: string, data: ICreateProductDTO): Promise<Product> {
     const product = await this.repository.update({
       where: {
