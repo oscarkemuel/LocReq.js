@@ -55,7 +55,7 @@ class PlaceController {
   async findNearbySellers(req: Request, res: Response) {
     const { placeId, search } = req.params;
 
-    const sellers = await this.placeService.findNearbySellers(placeId, search);
+    const sellers = await this.placeService.findNearbySellers(placeId, search === 'null' ? "" : search);
 
     return res.status(200).json({ sellers });
   }
