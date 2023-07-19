@@ -5,12 +5,14 @@ class UpdateRequestStatus implements IValidator {
   getSchema() {
     const updateRequestStatusSchema = z.object({
       body: z.object({
-        status: z.enum(['pending', 'accepted', 'rejected', 'delivered']),
+        status: z.enum(["requested", "confirmed", "rejected", "done"]),
       }),
       params: z.object({
-        requestId: z.string({
-          required_error: "requestId is required",
-        }).uuid("Not a valid uuid"),
+        requestId: z
+          .string({
+            required_error: "requestId is required",
+          })
+          .uuid("Not a valid uuid"),
       }),
     });
 
@@ -18,4 +20,4 @@ class UpdateRequestStatus implements IValidator {
   }
 }
 
-export { UpdateRequestStatus }
+export { UpdateRequestStatus };

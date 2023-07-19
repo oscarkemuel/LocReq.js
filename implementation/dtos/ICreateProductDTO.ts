@@ -1,7 +1,9 @@
 import { ICreateProductDTOAB } from "../../src/dtos/ICreateProductDTOAB";
 
 interface ICreateProductDTO extends ICreateProductDTOAB {
-  quantity: number;
+  startTime: Date;
+  endTime: Date;
+  available: boolean;
 }
 
-export {ICreateProductDTO}
+export { ICreateProductDTO };

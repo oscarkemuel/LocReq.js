@@ -29,14 +29,42 @@ class RequestService extends RequestServiceAbstract {
       throw new BadRequestError("Place does not belong to customer");
     }
 
-    await this.productService.productManage.templateMethod(
-      product.id,
-      data.quantity
+    const productIsAvailable = await this.productService.productIsAvailable(
+      product.id
     );
+    if (!productIsAvailable) {
+      throw new BadRequestError("Product is not available");
+    }
+
+    const customerResquests =
+      await this.deliveryRequestRepository.showByCustomerId(customer.id);
+    const customerRequestsFiltered = customerResquests.filter((request) => {
+      return request.status !== "canceled";
+    });
+    const customerProductsPromises = customerRequestsFiltered.map(
+      async (request) => {
+        const product = await this.productService.showById(request.productId);
+        return product;
+      }
+    );
+    const products = await Promise.all(customerProductsPromises);
+
+    for (let i = 0; i < products.length; i++) {
+      let existingProduct = products[i];
+      if (
+        product.startTime! >= existingProduct.endTime! ||
+        product.endTime! <= existingProduct.startTime!
+      ) {
+        continue;
+      } else {
+        throw new BadRequestError(
+          "Product is not available for you, Date colliding with existing one for you"
+        );
+      }
+    }
 
     const payload = {
-      status: "pending",
-      quantity: data.quantity,
+      status: "requested",
       delivery_time: new Date(),
       sellerId: product.sellerId,
       productId: product.id,
@@ -47,6 +75,8 @@ class RequestService extends RequestServiceAbstract {
     const deliveryRequest = await this.deliveryRequestRepository.create(
       payload
     );
+
+    await this.productService.updateAvailable(product.id, false);
 
     return deliveryRequest;
   }
@@ -74,42 +104,43 @@ class RequestService extends RequestServiceAbstract {
       );
     }
 
-    // pending -> accepted -> rejected -> delivered
+    // requested-> confirmed || rejected -> done
 
     if (status === deliveryRequest.status) {
       throw new BadRequestError("Delivery request already in this status");
     }
 
-    if (deliveryRequest.status === "delivered") {
+    if (deliveryRequest.status === "done") {
+      throw new BadRequestError("You are not allowed to change a done request");
+    }
+
+    if (status === "confirmed" && deliveryRequest.status !== "requested") {
+      throw new BadRequestError("You are not allowed to accept this request");
+    }
+
+    if (status === "rejected" && deliveryRequest.status !== "requested") {
+      throw new BadRequestError("You are not allowed to reject this request");
+    }
+
+    if (status === "done" && deliveryRequest.status !== "confirmed") {
       throw new BadRequestError(
-        "You are not allowed to deliver this delivery request"
+        "You are not allowed to mark this request as done"
       );
     }
 
-    if (status === "accepted" && deliveryRequest.status !== "pending") {
-      throw new BadRequestError(
-        "You are not allowed to accept this delivery request"
-      );
-    }
-
-    if (status === "rejected" && deliveryRequest.status !== "pending") {
-      throw new BadRequestError(
-        "You are not allowed to reject this delivery request"
-      );
-    }
-
-    if (status === "delivered" && deliveryRequest.status !== "accepted") {
-      throw new BadRequestError(
-        "You are not allowed to deliver this delivery request"
-      );
-    }
-
-    if (status === "pending") {
+    if (status === "requested") {
       throw new BadRequestError("You are not allowed to return to pending");
     }
 
     const newDeliveryRequest =
       await this.deliveryRequestRepository.updateStatus(requestId, status);
+
+    if (status === "rejected") {
+      await this.productService.updateAvailable(
+        deliveryRequest.productId,
+        true
+      );
+    }
 
     return newDeliveryRequest;
   }
@@ -132,13 +163,15 @@ class RequestService extends RequestServiceAbstract {
       throw new BadRequestError("Delivery request already canceled");
     }
 
-    if (deliveryRequest.status !== "pending") {
+    if (deliveryRequest.status !== "requested") {
       throw new BadRequestError(
         "You are not allowed to cancel this delivery request"
       );
     }
 
     await this.deliveryRequestRepository.updateStatus(id, "canceled");
+
+    await this.productService.updateAvailable(deliveryRequest.productId, true);
   }
 }
 

@@ -14,14 +14,13 @@ class CreateProduct implements IValidator {
         price: z.number({
           required_error: "Price is required",
         }),
-        quantity: z.number({
-          required_error: "Quantity is required",
-        }).int("Quantity must be an integer")
-      })
+        startTime: z.string().transform((str) => new Date(str)),
+        endTime: z.string().transform((str) => new Date(str)),
+      }),
     });
 
     return createProductSchema;
   }
 }
 
-export { CreateProduct }
+export { CreateProduct };
