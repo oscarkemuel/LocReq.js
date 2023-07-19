@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { validateSchema } from "../validations";
-import { createDeliveryRequestSchema } from "../validations/DeliveryRequest/createDeliveryRequest";
 import { showByStatusBySellerIdSchema } from "../validations/DeliveryRequest/showByStatusBySellerId";
 import { RequestService } from "../../implementation/services/requestService";
 
@@ -25,15 +24,9 @@ class RequestController {
   }
 
   async create(req: Request, res: Response) {
-    const { body: payload } = await validateSchema(
-      createDeliveryRequestSchema,
-      req
-    );
+    const { id: userId } = req.user;
 
-    const deliveryRequest = await this.requestService.create({
-      customerId: req.user.id,
-      ...payload,
-    });
+    const deliveryRequest = await this.requestService.create(userId, req);
 
     return res.status(201).json({ deliveryRequest });
   }

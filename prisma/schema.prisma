@@ -58,6 +58,7 @@ model Product {
 
   quantity  Int?
   model     String?
+  available Boolean?
   startTime DateTime?
   endTime   DateTime?
 }
