@@ -1,16 +1,15 @@
 import { NotFoundError } from "../../src/helpers/apiErros";
 import { ProductManageTemplate } from "../../src/services/abstract/productManageTemplate";
-import { ICreateProductDTO } from "../dtos/ICreateProductDTO";
 
 class ConcreteManage extends ProductManageTemplate {
-  preCheckProduct(product: ICreateProductDTO, quantity?: number) {
+  preCheckProduct(product: any, quantity?: number) {
     if (product.hasOwnProperty("quantity") && quantity !== undefined) {
       if (product.quantity < quantity) {
         throw new NotFoundError("Insufficient quantity");
       }
     }
   }
-  manageAction(product: ICreateProductDTO, quantity?: number) {
+  manageAction(product: any, quantity?: number) {
     if (product.hasOwnProperty("quantity") && quantity !== undefined) {
       const newQuantity = product.quantity - quantity;
 

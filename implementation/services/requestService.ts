@@ -10,18 +10,18 @@ import { validateSchema } from "../../src/validations";
 import { ProductService } from "./productService";
 import { PlaceService } from "../../src/services/placeService";
 import { ICreateDeliveryRequestDTO } from "../dtos/ICreateDeliveryRequestDTO";
+import { CreateRequest } from "../validations/DeliveryRequest/createReqeust";
 
 class RequestService extends RequestServiceAbstract {
   private updateRequestStatusSchema = new UpdateRequestStatus();
+  private createDeliveryRequestSchema = new CreateRequest();
   private productService = new ProductService();
   private placeService = new PlaceService();
-  async create(
-    data: Omit<
-      ICreateDeliveryRequestDTO,
-      "delivery_time" | "status" | "sellerId"
-    >
-  ) {
-    const customer = await this.customerService.getByUserId(data.customerId);
+  async create(userId: string, req: Request) {
+    const schema = this.createDeliveryRequestSchema.getSchema();
+    const { body: data } = await validateSchema(schema, req);
+
+    const customer = await this.customerService.getByUserId(userId);
     const place = await this.placeService.show(data.placeId);
     const product = await this.productService.showById(data.productId);
 

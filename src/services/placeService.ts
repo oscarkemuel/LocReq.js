@@ -9,7 +9,7 @@ class PlaceService {
   private addressService = new AddressService();
   private customerService = new CustomersService();
   private searchService = new SearchService();
-    
+
   async create(data: ICreatePlaceDTO) {
     const costumer = await this.customerService.getByUserId(data.userId);
 
@@ -17,10 +17,10 @@ class PlaceService {
       throw new NotFoundError('Customer not found');
     }
 
-    const {id: addressId} = await this.addressService.create(data.address);
-    
+    const { id: addressId } = await this.addressService.create(data.address);
+
     const place = await this.placeRepository.createPlace(addressId, costumer.id, data.name);
-  
+
     return place;
   }
 
@@ -32,7 +32,7 @@ class PlaceService {
     }
 
     const places = await this.placeRepository.showPlaces(costumer.id);
-  
+
     return places;
   }
 
@@ -48,7 +48,7 @@ class PlaceService {
 
   async destroy(placeId: string) {
     const place = await this.show(placeId);
-    
+
     if (!place) {
       throw new NotFoundError('Place not found');
     }
@@ -60,12 +60,12 @@ class PlaceService {
 
   async update(placeId: string, data: IUpdatePlaceDTO) {
     const place = await this.show(placeId);
-    
+
     if (!place) {
       throw new NotFoundError('Place not found');
     }
 
-    const {id: addressId} = await this.addressService.create(data.address);
+    const { id: addressId } = await this.addressService.create(data.address);
 
     const updatedPlace = await this.placeRepository.updatePlace(placeId, data.name, addressId);
 
@@ -82,12 +82,12 @@ class PlaceService {
   //   return places;
   // }
 
-  async findNearbySellers(placeId: string, sellerName: string) {
+  async findNearbySellers(placeId: string, search: string) {
     const place = await this.show(placeId);
     const address = await this.addressService.show(place.addressId);
 
-    const places = 
-      await this.searchService.Search(sellerName, address.neighborhood);
+    const places =
+      await this.searchService.Search({ neighborhood: address.neighborhood, search });
 
     return places;
   }

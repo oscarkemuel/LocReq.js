@@ -36,7 +36,7 @@ class PlaceController {
   }
 
   async update(req: Request, res: Response) {
-    const { body: payload, params: {placeId} } = 
+    const { body: payload, params: { placeId } } =
       await validateSchema(updatePlaceSchema, req);
 
     const place = await this.placeService.update(placeId, { ...payload, userId: req.user.id });
@@ -53,13 +53,9 @@ class PlaceController {
   }
 
   async findNearbySellers(req: Request, res: Response) {
-    const { placeId } = req.params;
-    const sellerName = req.body.sellerName;
-    console.log(sellerName)
-    let sellerNameAux;
-    sellerName === undefined ? sellerNameAux = "": sellerNameAux = sellerName;
+    const { placeId, search } = req.params;
 
-    const sellers = await this.placeService.findNearbySellers(placeId, sellerNameAux);
+    const sellers = await this.placeService.findNearbySellers(placeId, search === 'null' ? "" : search);
 
     return res.status(200).json({ sellers });
   }

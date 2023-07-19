@@ -1,14 +1,14 @@
 import { isNull } from "lodash";
 import { AddressRepository } from "../../src/repositories/AddressRepository";
 import { SellersRepository } from "../../src/repositories/SellersRepository";
-import { SearchStrategyService } from "../../src/services/searchStrategyService";
+import { ParamsSerarch, SearchStrategyService } from "../../src/services/searchStrategyService";
 import { Address } from '@prisma/client';
 
 class SearchService implements SearchStrategyService {
     private sellerRepository = new SellersRepository()
     private addressRepository = new AddressRepository()
 
-    async Search(sellerName: string, neighborhood: string) {
+    async Search({search, neighborhood}: ParamsSerarch): Promise<any> {
         const addressesWithSellers = await this.addressRepository.findByNeighborhoodWithSeller(neighborhood);
 
         const sellers = addressesWithSellers.map(address => {
@@ -36,7 +36,7 @@ class SearchService implements SearchStrategyService {
             }
         })
 
-        const sellersFilters = sellers.filter((seller) => { if (seller.seller.name.includes(sellerName)) { return seller } } )
+        const sellersFilters = sellers.filter((seller) => { if (seller.seller.name.includes(search)) { return seller } } )
 
         return sellersFilters;
     }
