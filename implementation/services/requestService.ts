@@ -129,7 +129,7 @@ class RequestService extends RequestServiceAbstract {
     }
 
     if (status === "requested") {
-      throw new BadRequestError("You are not allowed to return to pending");
+      throw new BadRequestError("You are not allowed to return to requested");
     }
 
     const newDeliveryRequest =
