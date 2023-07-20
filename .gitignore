@@ -3,3 +3,5 @@ dist
 .env
 db
 dev.db
+dev2.db
+dev3.db
