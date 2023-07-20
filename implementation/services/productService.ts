@@ -16,31 +16,31 @@ class ProductService extends ProductServiceAbstract {
   }
 
   async validateNewProduct(product: ICreateProductDTO) {
-    // 6'0 X 19 X 2 7/16 X 29L
-    // ["6'0", '19', '2 7/16', '29L']
+    // 6'2" X 19.5" X 2.5" X 31L
+    // ["6'2"", '19.5"', '2.5"', '31L']
     const attributes = product.name.trim().split(" X ");
   
     if (attributes.length !== 4) {
-      throw new BadRequestError("Product must have 4 attributes. Ex: 6'0 X 19 X 2 7/16 X 29L");
+      throw new BadRequestError("Product must have 4 attributes. Ex: 6'2\" X 19.5\" X 2.5\" X 31L");
     }
   
     // regex patterns for the attributes
     const patterns = [
-      /^\d+'?\d*$/, // length in feet and inches (ex. 6'0)
-      /^\d+$/, // width in inches (ex. 19)
-      /^\d+ \d+\/\d+$/, // thickness in inches and fractions of an inch (ex. 2 7/16)
-      /^\d+L$/ // volume in liters (ex. 29l)
+      /^\d+'?\d*"$/, // length in feet and inches (ex. 6'2")
+      /^\d+\.?\d*"$/, // width in inches (ex. 19.5")
+      /^\d+\.?\d*"$/, // thickness in inches and fractions of an inch (ex. 2.5")
+      /^\d+L$/ // volume in liters (ex. 31L)
     ];
   
     // validate each attribute
     for (let i = 0; i < attributes.length; i++) {
       if (!patterns[i].test(attributes[i])) {
-        throw new BadRequestError(`Attribute ${i + 1} is invalid`);
+        throw new BadRequestError(`Attribute ${i + 1} is invalida`);
       }
     }
   
     return true;
-  }
+}
 
   async update(id: string, data: ICreateProductDTO) {
     const product = await this.productRepository.showById(id);
